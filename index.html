@@ -265,6 +265,14 @@
         .pick-name { font:800 13px 'Orbitron',sans-serif; letter-spacing:1px; }
         .pick-sub { margin-top:6px; color:var(--mut); font-size:12px; line-height:1.4; }
         .ability-card .pick-portrait { height:78px; }
+        .map-pick-grid .map-pick-card { padding:8px; }
+        .map-preview-art { height:112px; border-radius:7px; overflow:hidden; position:relative; margin-bottom:10px; border:1px solid #ffffff20; background:#111; isolation:isolate; }
+        .map-preview-art::before { content:""; position:absolute; inset:0; background:var(--map-scene); }
+        .map-preview-art::after { content:""; position:absolute; inset:0; background:linear-gradient(180deg,transparent 45%,rgba(0,0,0,.68)); }
+        .map-scene-icon { position:absolute; z-index:1; left:50%; top:45%; transform:translate(-50%,-50%); font-size:42px; filter:drop-shadow(0 5px 7px #000); }
+        .map-scene-label { position:absolute; z-index:2; left:8px; bottom:7px; font:700 9px 'Orbitron',sans-serif; letter-spacing:1px; color:#fff; }
+        .map-pick-card.active { --op-color:var(--green); }
+        .map-pick-card .pick-sub { min-height:32px; }
         .ability-symbol { font:900 38px 'Orbitron',sans-serif; color:var(--ability-color,var(--cyan)); text-shadow:0 0 22px color-mix(in srgb,var(--ability-color,var(--cyan)) 45%,transparent); }
         .deploy-actions { display:flex; justify-content:space-between; align-items:center; gap:12px; margin-top:22px; }
         .deploy-actions .btn { width:auto; min-width:170px; margin:0; }
@@ -274,6 +282,36 @@
         .ability-help { margin-top:14px; color:#93a7ba; font-size:12px; }
         .operator-section { display:none !important; }
         @media(max-width:620px) { .pick-grid { grid-template-columns:1fr; } .pick-card { display:grid; grid-template-columns:76px 1fr; column-gap:12px; align-items:center; } .pick-portrait { grid-row:span 2; height:76px; margin:0; } .pick-portrait svg { width:66px;height:76px; } .pick-sub { margin-top:2px; } .deploy-actions { align-items:stretch; flex-wrap:wrap; } .deploy-actions .btn { flex:1; min-width:120px; } }
+
+
+        /* Pre-game deployment lobby */
+        .deploy-modal { width:min(1180px,97vw); }
+        .deploy-modal.map-step { width:min(1280px,98vw); }
+        .map-pick-grid { grid-template-columns:repeat(3,minmax(0,1fr)) !important; max-height:52vh; overflow:auto; padding:2px 5px 8px 2px; }
+        .preflight-layout { display:grid; grid-template-columns:minmax(0,1.55fr) minmax(250px,.85fr); gap:18px; align-items:start; }
+        .preflight-options { min-width:0; }
+        .preflight-options .pick-grid { grid-template-columns:repeat(3,minmax(0,1fr)); }
+        .preflight-summary { border:1px solid rgba(0,229,255,.23); border-radius:10px; background:linear-gradient(160deg,rgba(14,27,42,.94),rgba(5,11,19,.96)); overflow:hidden; }
+        .summary-section { padding:14px 15px; border-bottom:1px solid rgba(120,160,190,.13); }
+        .summary-label { color:var(--cyan); font:700 9px 'Orbitron',sans-serif; letter-spacing:2px; margin-bottom:9px; }
+        .operator-preview-art { min-height:125px; display:flex; justify-content:center; align-items:center; border-radius:8px; background:radial-gradient(ellipse at 50% 40%,rgba(0,229,255,.14),transparent 72%); }
+        .operator-preview-art svg { height:124px; width:112px; filter:drop-shadow(0 0 16px #00e5ff20); }
+        .summary-name { color:#f5fbff; font:800 14px 'Orbitron',sans-serif; letter-spacing:1px; }
+        .summary-copy { color:#9eafc2; font-size:12px; line-height:1.45; margin-top:6px; }
+        .weapon-summary-name { font-size:13px; }
+        .weapon-stat-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:7px; margin-top:10px; }
+        .weapon-stat-grid > div { padding:8px; border-radius:5px; border:1px solid #1d2b3a; background:rgba(255,255,255,.025); }
+        .weapon-stat-grid small { display:block; color:#7f93a8; font-size:9px; letter-spacing:1px; }
+        .weapon-stat-grid b { display:block; margin-top:3px; color:#fff; font:700 15px 'Orbitron',sans-serif; }
+        .ability-summary-line { display:flex; gap:11px; align-items:center; }
+        #preflight-ability-symbol { width:42px; height:42px; flex:0 0 42px; display:grid; place-items:center; border:1px solid var(--cyan); border-radius:8px; color:var(--cyan); font:900 23px 'Orbitron',sans-serif; background:rgba(0,229,255,.07); }
+        .cooldown-copy { font-size:10px; letter-spacing:.8px; }
+        .deployment-ready { display:flex; align-items:center; gap:8px; padding:12px 15px; color:var(--green); font:700 9px 'Orbitron',sans-serif; letter-spacing:1.5px; }
+        .ready-dot { width:7px; height:7px; border-radius:50%; background:var(--green); box-shadow:0 0 10px var(--green); }
+        .deploy-actions .btn.green { min-width:220px; min-height:48px; font-size:13px; letter-spacing:1.5px; box-shadow:0 0 22px rgba(0,255,157,.18); }
+        .deploy-actions .btn.green:hover { filter:brightness(1.12); transform:translateY(-1px); }
+        @media(max-width:800px) { .preflight-layout { grid-template-columns:1fr; } .preflight-summary { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); } .summary-section { border-right:1px solid rgba(120,160,190,.13); } .deployment-ready { grid-column:1/-1; } }
+        @media(max-width:560px) { .map-pick-grid { grid-template-columns:repeat(2,minmax(0,1fr)) !important; max-height:44vh; } .map-preview-art { height:82px; } .preflight-options .pick-grid { grid-template-columns:1fr; } .preflight-summary { grid-template-columns:1fr; } .deploy-modal { padding:15px; } .deploy-actions .btn.green { min-width:100%; } }
 
         /* Enhanced armory presentation */
         .sidebar, .stats-panel { border:1px solid rgba(0,229,255,.28); box-shadow:0 18px 50px rgba(0,0,0,.42), inset 0 0 24px rgba(0,229,255,.035); backdrop-filter:blur(12px); }
@@ -378,6 +416,24 @@
             </div>
             <div id="gun-tabs"></div>
             <div id="gun-list" class="gun-list"></div>
+            <div class="feature-panel map-picker-panel">
+                <h4>SELECT COMBAT ZONE</h4>
+                <div class="feature-row"><label for="map-select">ARENA MAP</label>
+                    <select id="map-select" aria-label="Choose arena map">
+                        <option value="neon">NEON DISTRICT</option>
+                        <option value="desert">DESERT OUTPOST</option>
+                        <option value="arctic">ARCTIC FACILITY</option>
+                        <option value="nostalgia">NOSTALGIA</option>
+                        <option value="jungle">JUNGLE</option>
+                        <option value="classicfps">THAT ONE FPS MAP</option>
+                        <option value="luxury">LUXURY</option>
+                        <option value="skatepark">SKATE PARK</option>
+                        <option value="spaceship">SPACESHIP</option>
+                        <option value="adrenaline">ADRENALINE HEIGHTS</option>
+                    </select>
+                </div>
+                <div id="map-description" class="feature-note">Industrial neon arena with central cover and long sightlines.</div>
+            </div>
             <button class="deploy" id="deploy-btn">DEPLOY &#9656;</button>
             <div class="feature-panel">
                 <h4>FEATURE OPTIONS</h4>
@@ -414,9 +470,39 @@
             <div class="deploy-eyebrow" id="deploy-step-label">DEPLOYMENT // STEP 01 OF 02</div>
             <h2 class="deploy-title" id="deploy-step-title">CHOOSE YOUR OPERATOR</h2>
             <p class="deploy-copy" id="deploy-step-copy">Pick your field specialist. Your choice changes your combat bonus.</p>
-            <div id="character-pick-grid" class="pick-grid"></div>
-            <div id="ability-pick-grid" class="pick-grid" style="display:none"></div>
-            <div class="ability-help" id="ability-help">Next, select one tactical ability before the first wave begins.</div>
+            <div class="preflight-layout">
+                <section class="preflight-options" aria-label="Loadout selection">
+                    <div id="character-pick-grid" class="pick-grid"></div>
+                    <div id="ability-pick-grid" class="pick-grid" style="display:none"></div>
+                    <div id="map-pick-grid" class="pick-grid map-pick-grid" style="display:none"></div>
+                    <div class="ability-help" id="ability-help">Choose your operator, review your loadout, then start Wave 1.</div>
+                </section>
+                <aside class="preflight-summary" aria-label="Deployment preview and loadout summary">
+                    <div class="summary-section">
+                        <div class="summary-label">OPERATOR PREVIEW</div>
+                        <div class="operator-preview-art" id="preflight-portrait"></div>
+                        <div class="summary-name" id="preflight-operator-name">VANGUARD</div>
+                        <div class="summary-copy" id="preflight-operator-perk">+10% WEAPON DAMAGE</div>
+                    </div>
+                    <div class="summary-section">
+                        <div class="summary-label">EQUIPPED WEAPON</div>
+                        <div class="summary-name weapon-summary-name" id="preflight-weapon-name">TACTICAL PISTOL</div>
+                        <div class="weapon-stat-grid">
+                            <div><small>DAMAGE</small><b id="preflight-damage">—</b></div>
+                            <div><small>FIRE RATE</small><b id="preflight-rpm">—</b></div>
+                            <div><small>MAGAZINE</small><b id="preflight-mag">—</b></div>
+                            <div><small>RELOAD</small><b id="preflight-reload">—</b></div>
+                        </div>
+                        <div class="summary-copy" id="preflight-weapon-desc"></div>
+                    </div>
+                    <div class="summary-section ability-summary-section">
+                        <div class="summary-label">TACTICAL ABILITY</div>
+                        <div class="ability-summary-line"><span id="preflight-ability-symbol">»</span><div><div class="summary-name" id="preflight-ability-name">OVERDRIVE</div><div class="summary-copy" id="preflight-ability-desc">Move faster for 8 seconds.</div></div></div>
+                        <div class="summary-copy cooldown-copy" id="preflight-ability-cooldown">COOLDOWN: 24 SECONDS · KEY Q</div>
+                    </div>
+                    <div class="deployment-ready"><span class="ready-dot"></span><span>READY FOR DEPLOYMENT</span></div>
+                </aside>
+            </div>
             <div class="deploy-actions">
                 <div class="step-dots"><i class="on" id="deploy-dot-1"></i><i id="deploy-dot-2"></i><span id="deploy-step-count">01 / 02</span></div>
                 <div style="display:flex;gap:9px;flex-wrap:wrap">
@@ -536,13 +622,17 @@
     let wave = 0, waveState = 'active', waveTimer = 0;
     let aiDifficulty = 'easy';
     const DIFFICULTY = { easy: { hp: 0.72, damage: 0.55, speed: 0.82, reaction: 1.35 }, normal: { hp: 1, damage: 1, speed: 1, reaction: 1 }, hard: { hp: 1.28, damage: 1.3, speed: 1.12, reaction: 0.78 } };
-    let streak = 0, streakUntil = 0;
+    let streak = 0, streakUntil = 0, bestKillStreak = 0;
     const achievementDefs = {
         first_blood: { title: 'FIRST BLOOD', test: () => killsInMatch >= 1 },
         sharpshooter: { title: 'SHARPSHOOTER', test: () => headshots >= 5 },
         slayer: { title: 'SLAYER', test: () => killsInMatch >= 10 },
         wave_five: { title: 'SURVIVOR', test: () => wave >= 5 },
-        unstoppable: { title: 'UNSTOPPABLE', test: () => streak >= 5 }
+        unstoppable: { title: 'UNSTOPPABLE', test: () => streak >= 5 },
+        double_kill: { title: 'DOUBLE TROUBLE', test: () => bestKillStreak >= 2 },
+        triple_kill: { title: 'TRIPLE THREAT', test: () => bestKillStreak >= 3 },
+        veteran: { title: 'FIELD VETERAN', test: () => killsInMatch >= 25 },
+        wave_ten: { title: 'WAVE BREAKER', test: () => wave >= 10 }
     };
     let unlockedAchievements = new Set();
     try { unlockedAchievements = new Set(JSON.parse(localStorage.getItem('tactical-fps-achievements') || '[]')); } catch (_) {}
@@ -566,6 +656,7 @@
         if (!activeChallenge || challengeComplete || activeChallenge.progress() < activeChallenge.target) { updateChallengeHud(); return; }
         challengeComplete = true;
         score += 500;
+        sfx.challenge();
         announce('CHALLENGE COMPLETE +500', '#ffb300');
         addFeed('FIELD CHALLENGE COMPLETE  +500', false, true);
         updateChallengeHud();
@@ -585,6 +676,7 @@
                     achievementToastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
                 }
                 addFeed('ACHIEVEMENT: ' + achievement.title, false, true);
+                sfx.achievement();
             }
         }
     }
@@ -707,6 +799,13 @@
         empty: () => tone(150, 0.04, 'square', 0.04),
         pickup: () => { tone(600, 0.08, 'sine', 0.06, 300); },
         wave: () => { tone(220, 0.35, 'sawtooth', 0.06, 220); tone(330, 0.35, 'square', 0.03, 330); },
+        multiKill: (count) => {
+            // Rising arcade-style confirmation for double/triple kills.
+            const notes = count >= 3 ? [660, 880, 1175] : [520, 780];
+            notes.forEach((n, i) => setTimeout(() => tone(n, 0.13, 'triangle', 0.065, n * 0.18), i * 75));
+        },
+        achievement: () => { [523, 659, 784, 1047].forEach((n, i) => setTimeout(() => tone(n, 0.16, 'sine', 0.055, 70), i * 85)); },
+        challenge: () => { [440, 554, 659, 880, 1108].forEach((n, i) => setTimeout(() => tone(n, 0.18, 'triangle', 0.06, 80), i * 70)); },
         botShot: (dist, heavy) => {
             const v = clamp(1 / (1 + dist * 0.07), 0.05, 0.8);
             noise(heavy ? 0.4 : 0.12, heavy ? 900 : 2400, 0.28 * v);
@@ -746,83 +845,78 @@
      * ===================================================================== */
     const solids = [];
     const colliders = [];
-    const wallMat  = new THREE.MeshStandardMaterial({ color: 0x2d3748, roughness: 0.7 });
-    const floorMat = new THREE.MeshStandardMaterial({ color: 0x151b26, roughness: 0.9 });
-    const boxMat   = new THREE.MeshStandardMaterial({ color: 0x744210, roughness: 0.5 });
-    const metalMat = new THREE.MeshStandardMaterial({ color: 0x4a5568, metalness: 0.8, roughness: 0.4 });
-    const trimMat  = new THREE.MeshBasicMaterial({ color: 0x00e5ff });
+    const coverPoints = [];
+    const mapObjects = [];
+    let wallMat, floorMat, boxMat, metalMat, trimMat;
+    let activeMap = 'neon';
 
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(120, 120), floorMat);
-    floor.rotation.x = -Math.PI / 2;
-    scene.add(floor);
-    const grid = new THREE.GridHelper(120, 60, 0x00e5ff, 0x23303f);
-    grid.position.y = 0.01;
-    scene.add(grid);
-
+    function addMapObject(obj) { scene.add(obj); mapObjects.push(obj); return obj; }
     function addSolid(w, h, d, mat, x, z, trim = false) {
         const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
         mesh.position.set(x, h / 2, z);
-        scene.add(mesh);
+        addMapObject(mesh);
         mesh.updateMatrixWorld();
         solids.push(mesh);
         colliders.push(new THREE.Box3().setFromObject(mesh));
-        if (trim) {   // glowing top edge so cover reads well in the dark
+        if (trim) {
             const t = new THREE.Mesh(new THREE.BoxGeometry(w + 0.04, 0.08, d + 0.04), trimMat);
             t.position.set(x, h + 0.02, z);
-            scene.add(t);
+            addMapObject(t);
         }
     }
 
-    addSolid(120, 14, 2, wallMat, 0, -60);
-    addSolid(120, 14, 2, wallMat, 0, 60);
-    addSolid(2, 14, 120, wallMat, -60, 0);
-    addSolid(2, 14, 120, wallMat, 60, 0);
-    addSolid(4, 10, 40, wallMat, -20, -10, true);
-    addSolid(4, 10, 40, wallMat, 20, 10, true);
-    addSolid(6, 6, 6, boxMat, 0, 0, true);
-    addSolid(16, 8, 8, metalMat, 30, -20, true);
-    addSolid(16, 8, 8, metalMat, -30, 20, true);
-    addSolid(4, 1.2, 4, boxMat, -8, 20, true);
-    addSolid(4, 1.2, 4, boxMat, 8, -20, true);
-    addSolid(5, 1.5, 3, boxMat, 40, 30, true);
-    addSolid(5, 1.5, 3, boxMat, -40, -30, true);
-    addSolid(3, 1.2, 3, boxMat, 0, 25, true);
-    // extra tall cover so bots have places to hide
-    addSolid(3, 3.2, 8, metalMat, -42, -8, true);
-    addSolid(3, 3.2, 8, metalMat, 42, 8, true);
-    addSolid(8, 3.2, 3, metalMat, 10, 40, true);
-    addSolid(8, 3.2, 3, metalMat, -10, -40, true);
-
-    const SPAWN_POINTS = [[0, 45], [-45, 45], [45, 45], [-45, -45], [45, -45], [0, -45]];
-
-    /* ---------- Collision helpers ---------- */
-    const _box = new THREE.Box3();
-    function hitsSolid(x, y, z, r, h) {
-        _box.min.set(x - r, y + 0.05, z - r);
-        _box.max.set(x + r, y + h, z + r);
-        for (const c of colliders) if (_box.intersectsBox(c)) return true;
-        return false;
+    function addCylinder(radiusTop, radiusBottom, height, mat, x, y, z, segments = 10) {
+        const mesh = new THREE.Mesh(new THREE.CylinderGeometry(radiusTop, radiusBottom, height, segments), mat);
+        mesh.position.set(x, y, z);
+        addMapObject(mesh);
+        return mesh;
     }
-    function moveXZ(pos, dx, dz, r, h) {
-        if (dx && !hitsSolid(pos.x + dx, pos.y, pos.z, r, h)) pos.x += dx;
-        if (dz && !hitsSolid(pos.x, pos.y, pos.z + dz, r, h)) pos.z += dz;
-    }
-    function groundAt(x, z, r, maxTop) {
-        let g = 0;
-        for (const c of colliders) {
-            if (c.max.y <= maxTop && c.max.y > g &&
-                x + r > c.min.x && x - r < c.max.x && z + r > c.min.z && z - r < c.max.z) g = c.max.y;
+
+    const MAPS = {
+        neon: {
+            label: 'NEON DISTRICT', description: 'Industrial neon arena with central cover and long sightlines.',
+            floor: 0x151b26, wall: 0x2d3748, box: 0x744210, metal: 0x4a5568, glow: 0x00e5ff, grid: 0x23303f
+        },
+        desert: {
+            label: 'DESERT OUTPOST', description: 'Sun-baked training yard with staggered barriers and crate lanes.',
+            floor: 0x55432d, wall: 0x8b7653, box: 0x9c6235, metal: 0x625d52, glow: 0xffb347, grid: 0x8d7654
+        },
+        arctic: {
+            label: 'ARCTIC FACILITY', description: 'Cold research compound with blue-lit cover blocks and narrow corridors.',
+            floor: 0x253747, wall: 0x526b7d, box: 0x587f91, metal: 0x718795, glow: 0x80f0ff, grid: 0x3c6075
+        },
+        nostalgia: {
+            label: 'NOSTALGIA', description: 'Retro arcade-inspired arena with warm sunset colors, chunky cover, and classic blocky lanes.',
+            floor: 0x49394b, wall: 0x8b536c, box: 0xe2a45f, metal: 0x645b78, glow: 0xffd166, grid: 0x78536e
+        },
+        jungle: {
+            label: 'JUNGLE', description: 'Overgrown jungle clearing with mossy barricades, tree-trunk cover, and leafy green sightlines.',
+            floor: 0x203b2b, wall: 0x355b3e, box: 0x70583b, metal: 0x536c4a, glow: 0x9cff6e, grid: 0x2b5638
+        },
+        classicfps: {
+            label: 'THAT ONE FPS MAP', description: 'A clean, symmetrical arena with mirrored lanes, central mid-control, and familiar tactical angles.',
+            floor: 0x343b43, wall: 0x626b74, box: 0x9a876a, metal: 0x77828b, glow: 0xf5e7b2, grid: 0x59636d
+        },
+        luxury: {
+            label: 'LUXURY', description: 'A polished black-and-gold penthouse arena with marble-toned cover and elegant symmetrical lanes.',
+            floor: 0x29262a, wall: 0x5a4b3a, box: 0xb49a68, metal: 0x8b8173, glow: 0xffd98a, grid: 0x514538
+        },
+        skatepark: {
+            label: 'SKATE PARK', description: 'Colorful concrete skate plaza with low ledges, rail-like barriers, and open trick-bowl lanes.',
+            floor: 0x59616b, wall: 0x3e4854, box: 0xe16d54, metal: 0x9ca7b0, glow: 0x6df5df, grid: 0x7b858e
+        },
+        spaceship: {
+            label: 'SPACESHIP', description: 'A futuristic starship interior with tight corridors, reactor cover, and cold illuminated bulkheads.',
+            floor: 0x182330, wall: 0x39495c, box: 0x4c6074, metal: 0x8395a8, glow: 0x63cfff, grid: 0x2b4258
+        },
+        adrenaline: {
+            label: 'ADRENALINE HEIGHTS', description: 'A high-energy elevated arena with tall cover towers, long exposed lanes, and raised-looking platforms.',
+            floor: 0x30243f, wall: 0x59406d, box: 0x9d4edd, metal: 0x6c708c, glow: 0xff4fd8, grid: 0x50345e
         }
-        return g;
-    }
-    function insideSolid(p) {
-        for (const c of colliders) if (c.containsPoint(p)) return true;
-        return false;
-    }
+    };
 
-    /* ---------- Cover points for the AI (spots just outside tall obstacles) ---------- */
-    const coverPoints = [];
-    (function buildCoverPoints() {
+    function buildCoverPoints() {
+        coverPoints.length = 0;
         const off = 1.6;
         colliders.forEach((c, i) => {
             if (i < 4 || c.max.y < 2.5) return;
@@ -838,7 +932,257 @@
                 coverPoints.push({ x, z });
             }
         });
-    })();
+    }
+
+    function applyMap(mapId) {
+        const id = MAPS[mapId] ? mapId : 'neon';
+        activeMap = id;
+        for (const obj of mapObjects) {
+            scene.remove(obj);
+            if (obj.geometry) obj.geometry.dispose();
+        }
+        mapObjects.length = 0; solids.length = 0; colliders.length = 0;
+        const theme = MAPS[id];
+        wallMat = new THREE.MeshStandardMaterial({ color: theme.wall, roughness: 0.72 });
+        floorMat = new THREE.MeshStandardMaterial({ color: theme.floor, roughness: 0.92 });
+        boxMat = new THREE.MeshStandardMaterial({ color: theme.box, roughness: 0.58 });
+        metalMat = new THREE.MeshStandardMaterial({ color: theme.metal, metalness: 0.62, roughness: 0.42 });
+        trimMat = new THREE.MeshBasicMaterial({ color: theme.glow });
+        const floor = new THREE.Mesh(new THREE.PlaneGeometry(120, 120), floorMat);
+        floor.rotation.x = -Math.PI / 2; addMapObject(floor);
+        const grid = new THREE.GridHelper(120, 60, theme.glow, theme.grid);
+        grid.position.y = 0.01; addMapObject(grid);
+
+        // Perimeter walls are shared by all three arenas.
+        addSolid(120, 14, 2, wallMat, 0, -60);
+        addSolid(120, 14, 2, wallMat, 0, 60);
+        addSolid(2, 14, 120, wallMat, -60, 0);
+        addSolid(2, 14, 120, wallMat, 60, 0);
+
+        if (id === 'neon') {
+            addSolid(4, 10, 40, wallMat, -20, -10, true); addSolid(4, 10, 40, wallMat, 20, 10, true);
+            addSolid(6, 6, 6, boxMat, 0, 0, true); addSolid(16, 8, 8, metalMat, 30, -20, true); addSolid(16, 8, 8, metalMat, -30, 20, true);
+            addSolid(4, 1.2, 4, boxMat, -8, 20, true); addSolid(4, 1.2, 4, boxMat, 8, -20, true);
+            addSolid(5, 1.5, 3, boxMat, 40, 30, true); addSolid(5, 1.5, 3, boxMat, -40, -30, true); addSolid(3, 1.2, 3, boxMat, 0, 25, true);
+            addSolid(3, 3.2, 8, metalMat, -42, -8, true); addSolid(3, 3.2, 8, metalMat, 42, 8, true);
+            addSolid(8, 3.2, 3, metalMat, 10, 40, true); addSolid(8, 3.2, 3, metalMat, -10, -40, true);
+        } else if (id === 'desert') {
+            addSolid(14, 3.5, 5, wallMat, -26, -24, true); addSolid(14, 3.5, 5, wallMat, 26, 24, true);
+            addSolid(5, 4.5, 12, metalMat, -12, 8, true); addSolid(5, 4.5, 12, metalMat, 12, -8, true);
+            addSolid(8, 2.4, 8, boxMat, 0, 0, true); addSolid(10, 2.2, 4, boxMat, -36, 12, true); addSolid(10, 2.2, 4, boxMat, 36, -12, true);
+            addSolid(4, 3, 4, boxMat, -4, -36, true); addSolid(4, 3, 4, boxMat, 4, 36, true);
+            addSolid(18, 2.5, 3, wallMat, 0, -45, true); addSolid(18, 2.5, 3, wallMat, 0, 45, true);
+            addSolid(3, 4, 10, metalMat, -43, 0, true); addSolid(3, 4, 10, metalMat, 43, 0, true);
+        } else if (id === 'arctic') {
+            addSolid(4, 8, 28, wallMat, -22, -8, true); addSolid(4, 8, 28, wallMat, 22, 8, true);
+            addSolid(12, 5, 7, metalMat, -34, -28, true); addSolid(12, 5, 7, metalMat, 34, 28, true);
+            addSolid(7, 4, 7, boxMat, 0, 0, true); addSolid(4, 3, 14, metalMat, -8, 27, true); addSolid(4, 3, 14, metalMat, 8, -27, true);
+            addSolid(16, 3, 4, wallMat, 0, -43, true); addSolid(16, 3, 4, wallMat, 0, 43, true);
+            addSolid(8, 2.5, 5, boxMat, -40, 12, true); addSolid(8, 2.5, 5, boxMat, 40, -12, true);
+            addSolid(3, 4.2, 3, metalMat, -12, -10, true); addSolid(3, 4.2, 3, metalMat, 12, 10, true);
+        } else if (id === 'nostalgia') {
+            // Retro arcade: chunky blocks and brightly trimmed, offset lanes.
+            addSolid(10, 5, 10, boxMat, 0, 0, true); addSolid(14, 3, 5, wallMat, -25, -22, true); addSolid(14, 3, 5, wallMat, 25, 22, true);
+            addSolid(5, 4, 14, metalMat, -15, 12, true); addSolid(5, 4, 14, metalMat, 15, -12, true);
+            addSolid(8, 2, 8, boxMat, -38, 0, true); addSolid(8, 2, 8, boxMat, 38, 0, true);
+            addSolid(18, 2.5, 3, wallMat, 0, -38, true); addSolid(18, 2.5, 3, wallMat, 0, 38, true);
+        } else if (id === 'jungle') {
+            addSolid(14, 3.2, 5, boxMat, -25, -22, true); addSolid(14, 3.2, 5, boxMat, 25, 22, true);
+            addSolid(6, 4.5, 6, wallMat, 0, 0, true); addSolid(4, 3, 15, metalMat, -14, 16, true); addSolid(4, 3, 15, metalMat, 14, -16, true);
+            addSolid(12, 2.5, 4, wallMat, -38, 18, true); addSolid(12, 2.5, 4, wallMat, 38, -18, true);
+            // Stylized trees and leafy canopies give this arena a jungle silhouette.
+            const bark = new THREE.MeshStandardMaterial({ color: 0x59432b, roughness: 1 });
+            const leaf = new THREE.MeshStandardMaterial({ color: 0x2e7d42, roughness: 1 });
+            [[-43,-32],[-32,34],[34,-34],[44,30],[-8,-43],[10,43]].forEach(([x,z]) => {
+                addCylinder(0.65, 0.9, 7, bark, x, 3.5, z, 8);
+                const crown = new THREE.Mesh(new THREE.ConeGeometry(3.2, 5.5, 7), leaf); crown.position.set(x, 8.5, z); addMapObject(crown);
+            });
+        } else if (id === 'classicfps') {
+            // Mirrored competitive lanes around a strong central mid position.
+            addSolid(18, 4, 7, boxMat, 0, 0, true); addSolid(5, 4, 14, wallMat, -18, -18, true); addSolid(5, 4, 14, wallMat, 18, 18, true);
+            addSolid(14, 3, 5, metalMat, -34, 0, true); addSolid(14, 3, 5, metalMat, 34, 0, true);
+            addSolid(5, 4, 12, wallMat, -42, -24, true); addSolid(5, 4, 12, wallMat, 42, 24, true);
+            addSolid(5, 4, 12, wallMat, -42, 24, true); addSolid(5, 4, 12, wallMat, 42, -24, true);
+            addSolid(18, 2.5, 3, boxMat, 0, -36, true); addSolid(18, 2.5, 3, boxMat, 0, 36, true);
+        } else if (id === 'luxury') {
+            addSolid(16, 3.2, 7, boxMat, 0, 0, true); addSolid(6, 6, 6, metalMat, -25, -20, true); addSolid(6, 6, 6, metalMat, 25, 20, true);
+            addSolid(18, 2.5, 4, wallMat, -28, 20, true); addSolid(18, 2.5, 4, wallMat, 28, -20, true);
+            addSolid(5, 3, 15, boxMat, -12, -30, true); addSolid(5, 3, 15, boxMat, 12, 30, true);
+            addSolid(10, 2, 6, metalMat, -42, 0, true); addSolid(10, 2, 6, metalMat, 42, 0, true);
+            addSolid(12, 2.5, 4, wallMat, 0, -43, true); addSolid(12, 2.5, 4, wallMat, 0, 43, true);
+        } else if (id === 'skatepark') {
+            addSolid(18, 2.4, 5, boxMat, 0, 0, true); addSolid(24, 2, 4, metalMat, -30, -18, true); addSolid(24, 2, 4, metalMat, 30, 18, true);
+            addSolid(7, 3, 7, wallMat, -12, 20, true); addSolid(7, 3, 7, wallMat, 12, -20, true);
+            addSolid(14, 1.5, 3, boxMat, -40, 8, true); addSolid(14, 1.5, 3, boxMat, 40, -8, true);
+            addSolid(4, 3.5, 16, metalMat, -20, -35, true); addSolid(4, 3.5, 16, metalMat, 20, 35, true);
+            addSolid(18, 2, 4, wallMat, 0, -45, true); addSolid(18, 2, 4, wallMat, 0, 45, true);
+        } else if (id === 'spaceship') {
+            addSolid(5, 9, 24, wallMat, -17, -12, true); addSolid(5, 9, 24, wallMat, 17, 12, true);
+            addSolid(20, 5, 5, metalMat, 0, 0, true); addSolid(4, 4, 14, boxMat, -32, 24, true); addSolid(4, 4, 14, boxMat, 32, -24, true);
+            addSolid(14, 3, 5, wallMat, -38, -8, true); addSolid(14, 3, 5, wallMat, 38, 8, true);
+            addSolid(5, 7, 5, metalMat, -6, -30, true); addSolid(5, 7, 5, metalMat, 6, 30, true);
+            addSolid(20, 3, 4, wallMat, 0, -46, true); addSolid(20, 3, 4, wallMat, 0, 46, true);
+        } else if (id === 'adrenaline') {
+            addSolid(8, 9, 8, boxMat, 0, 0, true); addSolid(5, 7, 14, wallMat, -20, -15, true); addSolid(5, 7, 14, wallMat, 20, 15, true);
+            addSolid(16, 4, 6, metalMat, -36, -24, true); addSolid(16, 4, 6, metalMat, 36, 24, true);
+            addSolid(10, 5, 5, boxMat, -40, 14, true); addSolid(10, 5, 5, boxMat, 40, -14, true);
+            addSolid(5, 6, 18, wallMat, -8, 35, true); addSolid(5, 6, 18, wallMat, 8, -35, true);
+            addSolid(18, 3.5, 5, metalMat, 0, -45, true); addSolid(18, 3.5, 5, metalMat, 0, 45, true);
+        }
+        // Signature architecture: each arena gets a distinct silhouette and landmarks,
+        // not just a different palette. These are additional map-specific 3D structures.
+        const landmarkMat = (color, metalness = 0.25, roughness = 0.65) =>
+            new THREE.MeshStandardMaterial({ color, metalness, roughness });
+        const addLandmark = (geometry, material, x, y, z, rx = 0, ry = 0, rz = 0, solid = true) => {
+            const m = new THREE.Mesh(geometry, material);
+            m.position.set(x, y, z); m.rotation.set(rx, ry, rz); addMapObject(m);
+            // Landmarks must participate in gameplay collision, not just render visually.
+            if (solid) {
+                m.updateMatrixWorld(true);
+                solids.push(m);
+                colliders.push(new THREE.Box3().setFromObject(m));
+            }
+            return m;
+        };
+        const accent = landmarkMat(theme.glow, 0.35, 0.35);
+        if (id === 'nostalgia') {
+            // Retro arcade cabinets, pixel-like pillars and a chunky central stage.
+            const cabinet = landmarkMat(0x29243d, 0.45, 0.35), screen = landmarkMat(0x55f3ff, 0.15, 0.25);
+            [-35, -18, 18, 35].forEach((x, i) => {
+                addLandmark(new THREE.BoxGeometry(5, 6, 3), cabinet, x, 3, i % 2 ? -31 : 31);
+                addLandmark(new THREE.BoxGeometry(3.8, 2.1, 0.12), screen, x, 4, i % 2 ? -29.42 : 29.42);
+                addLandmark(new THREE.BoxGeometry(1.2, 0.35, 0.18), accent, x, 1.7, i % 2 ? -29.4 : 29.4);
+            });
+            [-28, 28].forEach(x => [-12, 12].forEach(z => addLandmark(new THREE.BoxGeometry(4, 7, 4), landmarkMat(0xf06b9a), x, 3.5, z)));
+            addLandmark(new THREE.BoxGeometry(18, 0.7, 10), landmarkMat(0xf6c65b), 0, 0.35, 0);
+        } else if (id === 'jungle') {
+            // More natural jungle dressing: varied boulders, fallen trunks, layered canopies and hanging vines.
+            const rock = landmarkMat(0x59604a, 0, 1), vine = landmarkMat(0x416d35, 0, 0.95), log = landmarkMat(0x68462d, 0, 1);
+            const bark = landmarkMat(0x493526, 0, 0.98), leafDark = landmarkMat(0x174a2a, 0, 0.98), leafMid = landmarkMat(0x28733a, 0, 0.95), leafLight = landmarkMat(0x4d8b43, 0, 0.92);
+            [[-34,-8],[31,7],[-8,34],[10,-34],[-43,20],[43,-20],[-22,-26],[24,28]].forEach(([x,z],i) => {
+                const r = 2.8 + (i%3)*0.65;
+                addLandmark(new THREE.DodecahedronGeometry(r, 0), rock, x, r*0.48, z, 0.2*i, 0.4*i, 0.15*i);
+            });
+            [[-24,2,18,0.15],[24,-2,18,-0.15],[0,24,20,Math.PI/2],[-4,-23,13,0.2]].forEach(([x,z,len,rot]) =>
+                addLandmark(new THREE.CylinderGeometry(0.8, 1.05, len, 9), log, x, 1.0, z, Math.PI/2, rot, 0));
+            // Keep the central spawn lanes clear; trees are grouped around the outer routes.
+            [[-48,-30],[-48,0],[-48,34],[48,-34],[48,0],[48,34],[-30,48],[0,48],[30,-48]].forEach(([x,z],i) => {
+                const height = 13 + (i%3)*2, radius = 0.72 + (i%2)*0.2;
+                addLandmark(new THREE.CylinderGeometry(radius*0.82, radius*1.3, height, 8), bark, x, height/2, z, 0.03*(i%2), 0, 0.02*(i%3));
+                // Three overlapping leaf masses create a fuller, less geometric canopy.
+                addLandmark(new THREE.ConeGeometry(5.2, 8, 8), leafDark, x, height-1.5, z, 0.04, 0.12*i, 0, false);
+                addLandmark(new THREE.SphereGeometry(4.2, 8, 6), leafMid, x-1.1, height+1.3, z+0.5, 0, 0.2*i, 0, false);
+                addLandmark(new THREE.SphereGeometry(3.4, 8, 6), leafLight, x+1.6, height+2.1, z-0.8, 0, -0.16*i, 0, false);
+            });
+            [-38,-19,19,38].forEach((x,i) => addLandmark(new THREE.CylinderGeometry(0.08,0.12,10,5), vine, x, 9, i%2 ? -8 : 8, 0, 0, 0.12, false));
+        } else if (id === 'classicfps') {
+            // Readable three-lane competitive layout with a signature mid arch and lane markers.
+            const concrete = landmarkMat(0x9ba3aa, 0.1, 0.8), dark = landmarkMat(0x424b55, 0.3, 0.7);
+            addLandmark(new THREE.BoxGeometry(20, 1, 5), concrete, 0, 0.5, 0);
+            addLandmark(new THREE.BoxGeometry(4, 9, 3), dark, -9, 4.5, 0);
+            addLandmark(new THREE.BoxGeometry(4, 9, 3), dark, 9, 4.5, 0);
+            addLandmark(new THREE.BoxGeometry(14, 2, 3), concrete, 0, 8, 0);
+            [-1,1].forEach(side => [-34,-17,17,34].forEach(z => addLandmark(new THREE.BoxGeometry(7, 0.12, 1.1), accent, side*43, 0.08, z)));
+            [-1,1].forEach(side => addLandmark(new THREE.CylinderGeometry(0.7,0.7,8,8), dark, side*50, 4, 0));
+        } else if (id === 'luxury') {
+            // Penthouse room landmarks: tall fluted columns, planter boxes and chandelier rings.
+            const marble = landmarkMat(0xd6d0c5, 0.18, 0.28), gold = landmarkMat(0xd6ad59, 0.78, 0.25), plant = landmarkMat(0x2f6647, 0, 0.9);
+            [-42,-22,22,42].forEach(x => [-34,34].forEach(z => {
+                addLandmark(new THREE.CylinderGeometry(1.15,1.4,12,12), marble, x, 6, z);
+                addLandmark(new THREE.CylinderGeometry(1.55,1.55,0.45,12), gold, x, 11.8, z);
+            }));
+            [-30,30].forEach(x => {
+                addLandmark(new THREE.BoxGeometry(10,1.4,4), gold, x, 0.7, 0);
+                [-3,0,3].forEach(dx => addLandmark(new THREE.ConeGeometry(1.2,3.5,7), plant, x+dx, 2.9, 0));
+            });
+            addLandmark(new THREE.TorusGeometry(7,0.18,8,32), gold, 0, 11, 0, Math.PI/2, 0, 0);
+            addLandmark(new THREE.TorusGeometry(4.5,0.14,8,32), gold, 0, 10.4, 0, Math.PI/2, 0, 0);
+        } else if (id === 'skatepark') {
+            // Distinct skatepark geometry: curved bowls, sloped launch ramps and railings.
+            const concrete = landmarkMat(0x9aa4ad, 0.05, 0.85), rail = landmarkMat(0xd8e0e5, 0.8, 0.25), paint = landmarkMat(0xf06c59, 0.05, 0.65);
+            const rampGeo = new THREE.BoxGeometry(18, 1, 10);
+            addLandmark(rampGeo, concrete, -30, 2.2, 0, 0, 0, -0.28);
+            addLandmark(rampGeo, concrete, 30, 2.2, 0, 0, 0, 0.28);
+            addLandmark(new THREE.CylinderGeometry(11,11,1.2,32,1,true,0,Math.PI), concrete, 0, -0.15, 0, Math.PI/2, 0, 0);
+            [-38,-19,19,38].forEach(x => {
+                const bar = addLandmark(new THREE.CylinderGeometry(0.12,0.12,20,8), rail, x, 2.1, x%2 ? -22 : 22, Math.PI/2, 0, 0);
+                bar.rotation.z = Math.PI/2;
+            });
+            [-1,1].forEach(side => addLandmark(new THREE.BoxGeometry(12,0.2,2), paint, side*25, 3.8, side*8, 0, 0, side*0.28));
+        } else if (id === 'spaceship') {
+            // Reactor core and radial bulkhead ribs make this read as an interior vessel.
+            const hull = landmarkMat(0x35485c, 0.75, 0.35), reactor = landmarkMat(0x38d9ff, 0.3, 0.2);
+            addLandmark(new THREE.CylinderGeometry(5.5,5.5,12,16), hull, 0, 6, 0);
+            addLandmark(new THREE.TorusGeometry(7.2,0.42,10,32), reactor, 0, 5, 0, Math.PI/2, 0, 0);
+            addLandmark(new THREE.TorusGeometry(7.2,0.42,10,32), reactor, 0, 8, 0, Math.PI/2, 0, 0);
+            for (let i=0;i<12;i++) {
+                const a=i*Math.PI/6, x=Math.cos(a)*10, z=Math.sin(a)*10;
+                addLandmark(new THREE.BoxGeometry(2,10,3), hull, x, 5, z, 0, -a, 0);
+                addLandmark(new THREE.BoxGeometry(2.1,0.18,0.22), reactor, x, 7.5, z, 0, -a, 0);
+            }
+            [-1,1].forEach(side => addLandmark(new THREE.BoxGeometry(2,11,46), hull, side*45, 5.5, 0));
+        } else if (id === 'adrenaline') {
+            // Vertical-looking parkour arena: elevated platforms, jump ramps and tall pylons.
+            const platform = landmarkMat(0x51456d, 0.55, 0.35), edge = landmarkMat(0xff4fd8, 0.25, 0.3);
+            [[-34,-22,12,10,5],[34,-22,12,10,5],[-34,22,12,10,5],[34,22,12,10,5]].forEach(([x,z,w,d,y]) => {
+                addLandmark(new THREE.BoxGeometry(w,0.8,d), platform, x, y, z);
+                addLandmark(new THREE.BoxGeometry(w+0.2,0.15,d+0.2), edge, x, y+0.48, z);
+            });
+            [-18,18].forEach(x => [-38,38].forEach(z => addLandmark(new THREE.CylinderGeometry(1.3,1.8,16,8), platform, x, 8, z)));
+            addLandmark(new THREE.BoxGeometry(20,0.7,7), edge, 0, 7, -28, 0, 0, -0.22);
+            addLandmark(new THREE.BoxGeometry(20,0.7,7), edge, 0, 7, 28, 0, 0, 0.22);
+        }
+
+        if (typeof coverPoints !== 'undefined') buildCoverPoints();
+        const desc = $('map-description'); if (desc) desc.textContent = theme.description;
+        const fogColor = id === 'desert' ? 0x342719 : id === 'arctic' ? 0x0c1b29 : id === 'jungle' ? 0x102619 : id === 'spaceship' ? 0x07121f : id === 'nostalgia' ? 0x26172b : id === 'luxury' ? 0x171317 : id === 'skatepark' ? 0x28343d : id === 'adrenaline' ? 0x170e27 : id === 'classicfps' ? 0x20272d : 0x0a0c12;
+        scene.background = new THREE.Color(fogColor);
+        scene.fog.color.set(fogColor);
+        scene.fog.density = id === 'desert' ? 0.012 : id === 'arctic' ? 0.016 : id === 'jungle' ? 0.014 : id === 'spaceship' ? 0.02 : 0.018;
+    }
+
+    const SPAWN_POINTS = [[0, 45], [-45, 45], [45, 45], [-45, -45], [45, -45], [0, -45]];
+
+    /* ---------- Collision helpers ---------- */
+    const _box = new THREE.Box3();
+    function hitsSolid(x, y, z, r, h) {
+        _box.min.set(x - r, y + 0.05, z - r);
+        _box.max.set(x + r, y + h, z + r);
+        for (const c of colliders) if (_box.intersectsBox(c)) return true;
+        return false;
+    }
+    function moveXZ(pos, dx, dz, r, h) {
+        if (dx && !hitsSolid(pos.x + dx, pos.y, pos.z, r, h)) pos.x += dx;
+        if (dz && !hitsSolid(pos.x, pos.y, pos.z + dz, r, h)) pos.z += dz;
+    }
+    // Gentle auto-step for low obstacles: walk over curbs, small rocks and low debris
+    // without requiring a jump. Tall walls and crates still block movement.
+    function movePlayerAxisWithStep(pos, dx, dz, r, h) {
+        const nx = pos.x + dx, nz = pos.z + dz;
+        if (!hitsSolid(nx, pos.y, nz, r, h)) { pos.x = nx; pos.z = nz; return; }
+        const stepHeight = 0.62;
+        const top = groundAt(nx, nz, r * 0.72, pos.y + stepHeight + 0.02);
+        const rise = top - pos.y;
+        if (rise > 0.06 && rise <= stepHeight && !hitsSolid(nx, top, nz, r, h)) {
+            pos.x = nx; pos.z = nz; pos.y = top;
+            player.vy = 0; player.grounded = true;
+        }
+    }
+    function groundAt(x, z, r, maxTop) {
+        let g = 0;
+        for (const c of colliders) {
+            if (c.max.y <= maxTop && c.max.y > g &&
+                x + r > c.min.x && x - r < c.max.x && z + r > c.min.z && z - r < c.max.z) g = c.max.y;
+        }
+        return g;
+    }
+    function insideSolid(p) {
+        for (const c of colliders) if (c.containsPoint(p)) return true;
+        return false;
+    }
+
+    /* ---------- Cover points for AI, rebuilt whenever the map changes ---------- */
+    applyMap('neon');
 
     /* =====================================================================
      *  GUN MODELS  (detailed, built from primitives; one template per type)
@@ -1458,7 +1802,7 @@
             const boot = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.2, 0.42), rubberMat);
             boot.position.set(0, -0.92, 0.07); leg.add(boot);
         }
-        part(G.arm, suit, 0.38, 1.5, 0.28);
+        const armR = part(G.arm, suit, 0.38, 1.5, 0.28);
         const armL = part(G.arm, suit, -0.12, 1.45, 0.4);
         armL.rotation.y = 0.3;
 
@@ -1486,7 +1830,7 @@
         bar.visible = false;
         bot.add(bar);
 
-        bot.userData = { rig, legL, legR, suit, plate, anchor, mflash, bar, fill, fillMat, detailMats: [capsuleMat, rubberMat, gearMat, eyeMat], detailGeos: [sphereGeo] };
+        bot.userData = { rig, legL, legR, armL, armR, suit, plate, anchor, mflash, bar, fill, fillMat, detailMats: [capsuleMat, rubberMat, gearMat, eyeMat], detailGeos: [sphereGeo] };
         return bot;
     }
 
@@ -1816,7 +2160,12 @@
 
         // ---------- animation / visuals ----------
         const sw = moving ? Math.sin(d.walkT) * 0.75 : 0;
+        // Procedural locomotion: alternating legs, counter-swinging arms, body bob and subtle lean.
         d.legL.rotation.x = sw; d.legR.rotation.x = -sw;
+        if (d.armL && d.armR) { d.armL.rotation.x = -sw * 0.32; d.armR.rotation.x = sw * 0.22; }
+        d.rig.position.y = moving ? Math.abs(Math.sin(d.walkT * 2)) * 0.045 : Math.sin(now * 0.002 + bot.id) * 0.008;
+        d.rig.rotation.z = moving ? Math.sin(d.walkT) * 0.025 : Math.sin(now * 0.0015 + bot.position.x) * 0.006;
+        if (d.mfT > 0) d.rig.rotation.x = -0.025; else d.rig.rotation.x *= 0.82;
         if (d.mfT > 0) { d.mfT -= dt; if (d.mfT <= 0) d.mflash.visible = false; }
         if (d.flashT > 0) {
             d.flashT -= dt;
@@ -1901,8 +2250,10 @@
         addFeed(T.label, headshot);
         streak = now < streakUntil ? streak + 1 : 1;
         streakUntil = now + 3000;
-        if (streak === 2) announce('DOUBLE KILL', '#00e5ff');
-        else if (streak === 3) announce('TRIPLE KILL', '#ffb300');
+        bestKillStreak = Math.max(bestKillStreak, streak);
+        if (streak === 2) { announce('DOUBLE KILL', '#00e5ff'); sfx.multiKill(2); }
+        else if (streak === 3) { announce('TRIPLE KILL', '#ffb300'); sfx.multiKill(3); }
+        else if (streak >= 4) sfx.multiKill(3);
         else if (streak >= 4) announce('RAMPAGE x' + streak, '#ff3d57');
         else if (headshot) announce('HEADSHOT', '#ff3d57');
         if (streak >= 2) score += streak * 20;
@@ -2197,7 +2548,8 @@
         const k = Math.min(1, (player.grounded ? 14 : 4) * dt);
         player.vel.x += (tx - player.vel.x) * k;
         player.vel.z += (tz - player.vel.z) * k;
-        moveXZ(player.pos, player.vel.x * dt, player.vel.z * dt, CFG.playerRadius, CFG.playerHeight);
+        movePlayerAxisWithStep(player.pos, player.vel.x * dt, 0, CFG.playerRadius, CFG.playerHeight);
+        movePlayerAxisWithStep(player.pos, 0, player.vel.z * dt, CFG.playerRadius, CFG.playerHeight);
 
         const prevY = player.pos.y;
         player.vy += CFG.gravity * dt;
@@ -2444,7 +2796,7 @@
     function startMatch() {
         clearBullets(); clearBots(); clearParticles();
         abilityReadyAt = 0; abilityActiveUntil = 0;
-        killsInMatch = 0; headshots = 0; shotsFired = 0; shotsHit = 0; score = 0; streak = 0;
+        killsInMatch = 0; headshots = 0; shotsFired = 0; shotsHit = 0; score = 0; streak = 0; bestKillStreak = 0;
         activeChallenge = challengeDefs[Math.floor(Math.random() * challengeDefs.length)];
         challengeComplete = false;
         updateChallengeHud();
@@ -2468,6 +2820,28 @@
     }
 
     let deployStep = 1;
+    function updatePreflightSummary() {
+        const op = currentOperator();
+        const ability = currentAbility();
+        const weapon = currentWeapon();
+        $('preflight-portrait').innerHTML = operatorPortrait(op);
+        $('preflight-portrait').style.setProperty('--op-color', op.color);
+        $('preflight-operator-name').textContent = op.name;
+        $('preflight-operator-perk').textContent = op.perk;
+        $('preflight-weapon-name').textContent = weapon.name;
+        $('preflight-damage').textContent = Math.round(weapon.damage * (weapon.pellets || 1) * op.damage);
+        $('preflight-rpm').textContent = Math.round(60000 / weapon.cooldown) + ' RPM';
+        $('preflight-mag').textContent = weapon.mag + ' RDS';
+        $('preflight-reload').textContent = (weapon.reload / 1000).toFixed(1) + 's';
+        $('preflight-weapon-desc').textContent = weapon.desc;
+        $('preflight-ability-symbol').textContent = ability.symbol;
+        $('preflight-ability-symbol').style.color = ability.color;
+        $('preflight-ability-symbol').style.borderColor = ability.color;
+        $('preflight-ability-name').textContent = ability.name;
+        $('preflight-ability-name').style.color = ability.color;
+        $('preflight-ability-desc').textContent = ability.desc;
+        $('preflight-ability-cooldown').textContent = 'COOLDOWN: ' + ability.cooldown + ' SECONDS · KEY Q';
+    }
     function renderCharacterPicks() {
         const root = $('character-pick-grid');
         root.innerHTML = '';
@@ -2478,7 +2852,7 @@
             card.style.setProperty('--op-color', op.color);
             card.setAttribute('aria-pressed', op.id === selectedOperatorId ? 'true' : 'false');
             card.innerHTML = `<div class="pick-portrait">${operatorPortrait(op)}</div><div class="pick-name">${op.name}</div><div class="pick-sub">${op.perk}</div>`;
-            card.addEventListener('click', () => { selectedOperatorId = op.id; renderCharacterPicks(); populateOperators(); saveGame(); });
+            card.addEventListener('click', () => { selectedOperatorId = op.id; renderCharacterPicks(); populateOperators(); updatePreflightSummary(); saveGame(); });
             root.appendChild(card);
         });
     }
@@ -2492,37 +2866,72 @@
             card.style.setProperty('--ability-color', ability.color);
             card.setAttribute('aria-pressed', ability.id === selectedAbilityId ? 'true' : 'false');
             card.innerHTML = `<div class="pick-portrait"><div class="ability-symbol">${ability.symbol}</div></div><div class="pick-name">${ability.name}</div><div class="pick-sub">${ability.desc}</div>`;
-            card.addEventListener('click', () => { selectedAbilityId = ability.id; renderAbilityPicks(); saveGame(); });
+            card.addEventListener('click', () => { selectedAbilityId = ability.id; renderAbilityPicks(); updatePreflightSummary(); saveGame(); });
+            root.appendChild(card);
+        });
+    }
+    const MAP_PREVIEWS = {
+        neon: {icon:'🌃', scene:'linear-gradient(135deg,#071b38,#153d62 42%,#ec2cba 43%,#07101c 72%)', tag:'NEON CITY'},
+        desert: {icon:'🏜️', scene:'linear-gradient(155deg,#f4c77c,#b86b38 52%,#49301f 53%,#16151a)', tag:'DESERT OUTPOST'},
+        arctic: {icon:'❄️', scene:'linear-gradient(140deg,#bceaff,#668eae 45%,#263e55 46%,#101b2b)', tag:'ARCTIC FACILITY'},
+        nostalgia: {icon:'🕹️', scene:'linear-gradient(135deg,#21133c,#7c2d9b 40%,#ed54d2 41%,#101322 72%)', tag:'ARCADE DISTRICT'},
+        jungle: {icon:'🌴', scene:'linear-gradient(135deg,#a7c56a,#426d35 38%,#203f24 39%,#09180f 80%)', tag:'OVERGROWN RUINS'},
+        classicfps: {icon:'🏢', scene:'linear-gradient(140deg,#b9c3c9,#606d76 45%,#333c45 46%,#10151c)', tag:'TACTICAL COMPOUND'},
+        luxury: {icon:'🏝️', scene:'linear-gradient(135deg,#f8d8a0,#c59a62 40%,#366c78 41%,#152b35 76%)', tag:'LUXURY RESORT'},
+        skatepark: {icon:'🛹', scene:'linear-gradient(155deg,#8bd5f5,#d5e0e3 40%,#929ca5 41%,#34424e 72%)', tag:'URBAN SKATEPARK'},
+        spaceship: {icon:'🚀', scene:'linear-gradient(135deg,#061326,#17628a 40%,#27d8ff 42%,#111a2a 70%)', tag:'ORBITAL STATION'},
+        adrenaline: {icon:'⛰️', scene:'linear-gradient(145deg,#d7edff,#637d9a 43%,#26364d 44%,#111521 72%)', tag:'MOUNTAIN PLATFORM'}
+    };
+    function renderMapPicks() {
+        const root = $('map-pick-grid');
+        root.innerHTML = '';
+        const select = $('map-select');
+        [...select.options].forEach(option => {
+            const id = option.value, preview = MAP_PREVIEWS[id] || MAP_PREVIEWS.neon;
+            const card = document.createElement('button');
+            card.type = 'button'; card.className = 'pick-card map-pick-card' + (id === select.value ? ' active' : '');
+            card.setAttribute('aria-pressed', id === select.value ? 'true' : 'false');
+            card.innerHTML = `<div class="map-preview-art" style="--map-scene:${preview.scene}"><span class="map-scene-icon">${preview.icon}</span><span class="map-scene-label">${preview.tag}</span></div><div class="pick-name">${option.textContent}</div><div class="pick-sub">${(MAPS[id] && MAPS[id].description) || 'Explore this combat zone.'}</div>`;
+            card.addEventListener('click', () => {
+                select.value = id;
+                root.querySelectorAll('.map-pick-card').forEach(c => { const active = c === card; c.classList.toggle('active', active); c.setAttribute('aria-pressed', active ? 'true' : 'false'); });
+                const desc = $('map-description'); if (desc && MAPS[id]) desc.textContent = MAPS[id].description;
+                saveGame();
+            });
             root.appendChild(card);
         });
     }
     function showDeployStep(step) {
         deployStep = step;
-        const characterStep = step === 1;
+        const characterStep = step === 1, abilityStep = step === 2, mapStep = step === 3;
         $('character-pick-grid').style.display = characterStep ? 'grid' : 'none';
-        $('ability-pick-grid').style.display = characterStep ? 'none' : 'grid';
-        $('deploy-step-label').textContent = characterStep ? 'DEPLOYMENT // STEP 01 OF 02' : 'DEPLOYMENT // STEP 02 OF 02';
-        $('deploy-step-title').textContent = characterStep ? 'CHOOSE YOUR OPERATOR' : 'SELECT A TACTICAL ABILITY';
-        $('deploy-step-copy').textContent = characterStep ? 'Pick your field specialist. Your choice changes your combat bonus.' : 'Choose one ability for this match. Press Q during combat to activate it.';
-        $('ability-help').textContent = characterStep ? 'Next, select one tactical ability before the first wave begins.' : 'Your selected ability is ready when the first wave starts.';
+        $('ability-pick-grid').style.display = abilityStep ? 'grid' : 'none';
+        $('map-pick-grid').style.display = mapStep ? 'grid' : 'none';
+        $('deploy-step-label').textContent = `DEPLOYMENT // STEP 0${step} OF 03`;
+        $('deploy-step-title').textContent = characterStep ? 'CHOOSE YOUR OPERATOR' : abilityStep ? 'SELECT A TACTICAL ABILITY' : 'CHOOSE YOUR MAP';
+        $('deploy-step-copy').textContent = characterStep ? 'Pick your field specialist. Your choice changes your combat bonus.' : abilityStep ? 'Choose one ability for this match. Press Q during combat to activate it.' : 'Choose a combat zone by its preview image. Your selection sets the arena for this wave.';
+        $('ability-help').textContent = characterStep ? 'Next, select your tactical ability.' : abilityStep ? 'After choosing an ability, pick your map.' : 'Select a map image, then deploy into the arena.';
         $('deploy-dot-1').classList.toggle('on', characterStep);
-        $('deploy-dot-2').classList.toggle('on', !characterStep);
-        $('deploy-step-count').textContent = characterStep ? '01 / 02' : '02 / 02';
+        $('deploy-dot-2').classList.toggle('on', abilityStep);
+        $('deploy-step-count').textContent = `0${step} / 03`;
         $('deploy-back-btn').style.display = characterStep ? 'none' : 'inline-block';
-        $('deploy-next-btn').textContent = characterStep ? 'CHOOSE ABILITY →' : 'START WAVE 1 ▶';
+        $('deploy-next-btn').textContent = characterStep ? 'CONTINUE: CHOOSE ABILITY →' : abilityStep ? 'CONTINUE: CHOOSE MAP →' : '▶  START WAVE 1';
+        $('deploy-next-btn').setAttribute('aria-label', characterStep ? 'Continue to tactical ability selection' : abilityStep ? 'Continue to map selection' : 'Start Wave 1 and begin gameplay');
+        $('operator-select-overlay').querySelector('.deploy-modal').classList.toggle('map-step', mapStep);
+        $('deploy-back-btn').onclick = () => showDeployStep(Math.max(1, deployStep - 1));
+        if (mapStep) renderMapPicks();
     }
     function openDeploymentSelection() {
         $('operator-select-overlay').style.display = 'flex';
-        renderCharacterPicks();
-        renderAbilityPicks();
-        showDeployStep(1);
+        renderCharacterPicks(); renderAbilityPicks(); renderMapPicks(); updatePreflightSummary(); showDeployStep(1);
     }
     function handleDeployStepNext() {
-        if (deployStep === 1) { showDeployStep(2); return; }
+        if (deployStep < 3) { showDeployStep(deployStep + 1); return; }
         $('operator-select-overlay').style.display = 'none';
         deployToCombat();
     }
     function deployToCombat() {
+        const mapSelect = $('map-select'); if (mapSelect && activeMap !== mapSelect.value) applyMap(mapSelect.value);
         ensureAudio();
         $('lobby-ui').style.display = 'none';
         $('hud').style.display = 'block';
@@ -2651,9 +3060,15 @@
      * ===================================================================== */
     $('login-btn').addEventListener('click', handleLogin);
     $('login-username').addEventListener('keydown', (e) => { if (e.code === 'Enter') handleLogin(); });
+    $('map-select').addEventListener('change', (e) => {
+        if (state === 'playing') return;
+        applyMap(e.target.value);
+        setupLobbyCamera();
+        announce(MAPS[activeMap].label + ' SELECTED', MAPS[activeMap].glow ? '#' + MAPS[activeMap].glow.toString(16).padStart(6, '0') : '#00e5ff');
+    });
     $('deploy-btn').addEventListener('click', openDeploymentSelection);
     $('deploy-next-btn').addEventListener('click', handleDeployStepNext);
-    $('deploy-back-btn').addEventListener('click', () => showDeployStep(1));
+
     const difficultySelect = $('ai-difficulty');
     if (difficultySelect) difficultySelect.addEventListener('change', () => { aiDifficulty = difficultySelect.value; });
     $('return-btn').addEventListener('click', returnToLobby);
