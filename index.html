@@ -23,6 +23,15 @@
 
         /* =============== HUD =============== */
         #hud { position: absolute; inset: 0; pointer-events: none; display: none; z-index: 10; }
+        #mission-panel { position:absolute; top:16px; left:16px; width:245px; padding:12px 14px; border:1px solid rgba(0,255,157,.4); background:rgba(5,12,18,.82); box-shadow:0 0 18px rgba(0,255,157,.08); }
+        #mission-panel small { display:block; color:var(--green); font:700 10px 'Orbitron',sans-serif; letter-spacing:2px; }
+        #mission-title { margin-top:6px; font:700 12px 'Orbitron',sans-serif; letter-spacing:1px; color:#fff; }
+        #mission-progress-text { margin-top:5px; font-size:12px; color:var(--mut); }
+        #mission-track { height:5px; margin-top:8px; background:rgba(255,255,255,.12); overflow:hidden; }
+        #mission-fill { height:100%; width:0; background:var(--green); box-shadow:0 0 8px var(--green); transition:width .2s; }
+        #mission-reward { margin-top:7px; color:var(--amber); font-size:10px; letter-spacing:1px; }
+        @media (max-width:700px) { #mission-panel { top:12px; left:12px; width:190px; padding:8px; } #mission-title { font-size:10px; } }
+
         #vignette {
             position: absolute; inset: 0; opacity: 0; transition: opacity 0.25s;
             background: radial-gradient(ellipse at center, transparent 48%, rgba(255, 0, 30, 0.6) 100%);
@@ -223,12 +232,25 @@
         .feature-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 7px 0; font-size: 12px; letter-spacing: 1px; color: var(--mut); }
         .feature-row select { width: 92px; padding: 5px; border: 1px solid #2a3442; border-radius: 4px; color: #fff; background: #111925; font: inherit; }
         .feature-note { margin-top: 6px; font-size: 10px; line-height: 1.4; letter-spacing: 1px; color: var(--mut); }
+
+        /* Achievement toast: extra polish for showcase builds */
+        #achievement-toast { position:absolute; left:50%; top:100px; transform:translateX(-50%) translateY(-12px); opacity:0; z-index:30; pointer-events:none; min-width:260px; padding:12px 20px; text-align:center; border:1px solid rgba(0,255,157,.65); background:rgba(5,18,22,.94); box-shadow:0 0 24px rgba(0,255,157,.18); transition:opacity .2s, transform .2s; }
+        #achievement-toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+        #achievement-toast small { display:block; color:var(--green); letter-spacing:3px; font-size:10px; }
+        #achievement-toast strong { display:block; margin-top:4px; color:#fff; font-family:'Orbitron',sans-serif; letter-spacing:1px; }
+        .feature-panel { margin-top:14px; padding:12px; border:1px solid var(--line); background:rgba(0,229,255,.035); }
+        .feature-panel h4 { margin:0 0 10px; color:var(--cyan); letter-spacing:2px; font-size:12px; }
+        .feature-row { display:flex; justify-content:space-between; align-items:center; gap:12px; margin:8px 0; font-size:13px; }
+        .feature-row select { background:#101923; color:var(--txt); border:1px solid var(--line); padding:5px 8px; }
+        .feature-note { margin-top:8px; color:var(--mut); font-size:10px; letter-spacing:1px; line-height:1.4; }
+
     </style>
 </head>
 <body>
 
     <canvas id="game-canvas"></canvas>
     <div id="damage-flash"></div>
+    <div id="achievement-toast"><small>ACHIEVEMENT UNLOCKED</small><strong id="achievement-title">FIRST BLOOD</strong></div>
 
     <!-- ================= HUD ================= -->
     <div id="hud">
@@ -240,6 +262,13 @@
         <div id="announce"></div>
         <div id="reload-wrap"><div class="rt">RELOADING</div><div id="reload-track"><div id="reload-bar"></div></div></div>
 
+        <div id="mission-panel">
+            <small>FIELD CHALLENGE</small>
+            <div id="mission-title">ELIMINATE 10 HOSTILES</div>
+            <div id="mission-progress-text">0 / 10</div>
+            <div id="mission-track"><div id="mission-fill"></div></div>
+            <div id="mission-reward">REWARD: +500 BONUS SCORE</div>
+        </div>
         <div class="hud-top glass">
             <div class="wv"><small>WAVE</small><b id="hud-wave">1</b></div>
             <div class="en"><small>HOSTILES</small><b id="hud-enemies">0</b></div>
@@ -404,6 +433,57 @@
     let killsInMatch = 0, headshots = 0, shotsFired = 0, shotsHit = 0, score = 0, matchStart = 0;
     let wave = 0, waveState = 'active', waveTimer = 0;
     let streak = 0, streakUntil = 0;
+    const achievementDefs = {
+        first_blood: { title: 'FIRST BLOOD', test: () => killsInMatch >= 1 },
+        sharpshooter: { title: 'SHARPSHOOTER', test: () => headshots >= 5 },
+        slayer: { title: 'SLAYER', test: () => killsInMatch >= 10 },
+        wave_five: { title: 'SURVIVOR', test: () => wave >= 5 },
+        unstoppable: { title: 'UNSTOPPABLE', test: () => streak >= 5 }
+    };
+    let unlockedAchievements = new Set();
+    try { unlockedAchievements = new Set(JSON.parse(localStorage.getItem('tactical-fps-achievements') || '[]')); } catch (_) {}
+    const challengeDefs = [
+        { title: 'ELIMINATE 10 HOSTILES', target: 10, progress: () => killsInMatch },
+        { title: 'LAND 3 HEADSHOTS', target: 3, progress: () => headshots },
+        { title: 'REACH WAVE 3', target: 3, progress: () => wave }
+    ];
+    let activeChallenge = challengeDefs[0], challengeComplete = false;
+    function updateChallengeHud() {
+        if (!activeChallenge) return;
+        const progress = Math.min(activeChallenge.target, activeChallenge.progress());
+        const title = $('mission-title'), text = $('mission-progress-text'), fill = $('mission-fill');
+        if (title) title.textContent = challengeComplete ? 'CHALLENGE COMPLETE!' : activeChallenge.title;
+        if (text) text.textContent = challengeComplete ? 'OBJECTIVE SECURED' : progress + ' / ' + activeChallenge.target;
+        if (fill) fill.style.width = (progress / activeChallenge.target * 100) + '%';
+        const panel = $('mission-panel');
+        if (panel) panel.style.borderColor = challengeComplete ? 'rgba(255,179,0,.8)' : 'rgba(0,255,157,.4)';
+    }
+    function checkChallenge() {
+        if (!activeChallenge || challengeComplete || activeChallenge.progress() < activeChallenge.target) { updateChallengeHud(); return; }
+        challengeComplete = true;
+        score += 500;
+        announce('CHALLENGE COMPLETE +500', '#ffb300');
+        addFeed('FIELD CHALLENGE COMPLETE  +500', false, true);
+        updateChallengeHud();
+        updateWaveHud();
+    }
+    let achievementToastTimer = null;
+    function checkAchievements() {
+        for (const [id, achievement] of Object.entries(achievementDefs)) {
+            if (!unlockedAchievements.has(id) && achievement.test()) {
+                unlockedAchievements.add(id);
+                try { localStorage.setItem('tactical-fps-achievements', JSON.stringify([...unlockedAchievements])); } catch (_) {}
+                const toast = $('achievement-toast');
+                if (toast) {
+                    $('achievement-title').textContent = achievement.title;
+                    toast.classList.add('show');
+                    clearTimeout(achievementToastTimer);
+                    achievementToastTimer = setTimeout(() => toast.classList.remove('show'), 2600);
+                }
+                addFeed('ACHIEVEMENT: ' + achievement.title, false, true);
+            }
+        }
+    }
 
     const player = {
         pos: new THREE.Vector3(0, 0, 40),
@@ -1181,10 +1261,10 @@
      *  BOTS : archetypes, models
      * ===================================================================== */
     const BOT_TYPES = {
-        grunt:  { label: 'GRUNT',  hp: 65, speed: 3.8, gun: 'm4',      dmg: 4,  burst: [2, 3],  interval: 140, pause: [900, 1500], range: [10, 30], acc: 0.095, scale: 1.0,  body: 0x232a35, plate: 0x3d5a80, glow: 0x00e5ff, score: 100, cover: true,  bulletSpeed: 58 },
-        rusher: { label: 'RUSHER', hp: 45, speed: 5.0, gun: 'shotgun', dmg: 3,  pellets: 4, cooldown: [1500, 2100], range: [0, 12], acc: 0.12,  scale: 0.92, body: 0x2b1a1a, plate: 0xa83232, glow: 0xff3d57, score: 130, cover: false, bulletSpeed: 48 },
-        sniper: { label: 'SNIPER', hp: 55, speed: 2.8, gun: 'sniper',  dmg: 14, charge: 1800, cooldown: [3000, 4200], range: [28, 52], acc: 0.035, scale: 1.0, body: 0x1d2620, plate: 0x2f6f4f, glow: 0x66ff99, score: 180, cover: true,  bulletSpeed: 170 },
-        heavy:  { label: 'HEAVY',  hp: 130, speed: 2.3, gun: 'heavy',   dmg: 3,  burst: [4, 6],  interval: 130, pause: [1300, 1900], range: [8, 25], acc: 0.12, scale: 1.25, body: 0x2a2a2a, plate: 0x8a6d1d, glow: 0xffb300, score: 250, cover: false, bulletSpeed: 52 }
+        grunt:  { label: 'GRUNT',  hp: 50, speed: 3.2, gun: 'm4',      dmg: 2,  burst: [2, 3],  interval: 140, pause: [900, 1500], range: [10, 30], acc: 0.095, scale: 1.0,  body: 0x232a35, plate: 0x3d5a80, glow: 0x00e5ff, score: 100, cover: true,  bulletSpeed: 58 },
+        rusher: { label: 'RUSHER', hp: 35, speed: 4.0, gun: 'shotgun', dmg: 2,  pellets: 4, cooldown: [1500, 2100], range: [0, 12], acc: 0.12,  scale: 0.92, body: 0x2b1a1a, plate: 0xa83232, glow: 0xff3d57, score: 130, cover: false, bulletSpeed: 48 },
+        sniper: { label: 'SNIPER', hp: 42, speed: 2.3, gun: 'sniper',  dmg: 8, charge: 1800, cooldown: [3000, 4200], range: [28, 52], acc: 0.035, scale: 1.0, body: 0x1d2620, plate: 0x2f6f4f, glow: 0x66ff99, score: 180, cover: true,  bulletSpeed: 170 },
+        heavy:  { label: 'HEAVY',  hp: 95, speed: 1.9, gun: 'heavy',   dmg: 2,  burst: [4, 6],  interval: 130, pause: [1300, 1900], range: [8, 25], acc: 0.12, scale: 1.25, body: 0x2a2a2a, plate: 0x8a6d1d, glow: 0xffb300, score: 250, cover: false, bulletSpeed: 52 }
     };
 
     const BOT_GEO = {
@@ -1314,14 +1394,14 @@
         const bot = buildBotModel(typeKey);
         bot.position.copy(pickFreePoint(32, true));
         bot.rotation.y = Math.random() * Math.PI * 2;
-        const skill = clamp(0.3 + wave * 0.09, 0.3, 1);
-        const hpMul = 1 + 0.07 * (wave - 1);
+        const skill = 0.22; // beginner-friendly AI: slower reactions and less accurate shots
+        const hpMul = 1 + 0.025 * (wave - 1);
         const ud = bot.userData;
         Object.assign(ud, {
             typeKey, T, dead: false,
             hp: T.hp * hpMul, maxHp: T.hp * hpMul, skill,
-            react: 700 - 420 * skill,
-            dmgMul: Math.min(1.7, 1 + 0.045 * (wave - 1)),
+            react: 1050 - 250 * skill,
+            dmgMul: Math.min(0.85, 0.72 + 0.01 * (wave - 1)),
             h: 2.7 * T.scale, headY: 1.95 * T.scale, r: 0.8 * T.scale,
             state: 'patrol', sees: false, nextSense: 0, reactAt: 0,
             lastKnown: new THREE.Vector3(), lastSeenAt: -1e9,
@@ -1686,6 +1766,8 @@
         else if (streak >= 4) announce('RAMPAGE x' + streak, '#ff3d57');
         else if (headshot) announce('HEADSHOT', '#ff3d57');
         if (streak >= 2) score += streak * 20;
+        checkAchievements();
+        checkChallenge();
 
         if (Math.random() < 0.25) spawnPickup(bot.position.x, bot.position.z);
         updateWaveHud();
@@ -1741,6 +1823,7 @@
     function startWave(n) {
         wave = n;
         waveState = 'active';
+        checkAchievements();
         for (const t of composeWave(n)) spawnBot(t);
         announce('WAVE ' + n, '#00e5ff');
         sfx.wave();
@@ -1757,6 +1840,7 @@
             setHealthHud();
             announce('WAVE CLEARED', '#00ff9d');
             addFeed('WAVE ' + wave + ' CLEARED  +' + bonus, false, true);
+            checkChallenge();
         } else if (waveState === 'break') {
             waveTimer -= dt;
             if (waveTimer <= 0) startWave(wave + 1);
@@ -1812,6 +1896,7 @@
         v.classList.toggle('low', hp > 0 && hp <= 30);
     }
     function updateWaveHud() {
+        updateChallengeHud();
         $('hud-wave').textContent = wave;
         $('hud-enemies').textContent = bots.length;
         $('hud-score').textContent = score;
@@ -2200,6 +2285,9 @@
     function startMatch() {
         clearBullets(); clearBots(); clearParticles();
         killsInMatch = 0; headshots = 0; shotsFired = 0; shotsHit = 0; score = 0; streak = 0;
+        activeChallenge = challengeDefs[Math.floor(Math.random() * challengeDefs.length)];
+        challengeComplete = false;
+        updateChallengeHud();
         matchStart = performance.now();
         player.health = 100; player.vel.set(0, 0, 0); player.vy = 0; player.pitch = 0; player.lastHurt = 0;
         const sp = SPAWN_POINTS[Math.floor(Math.random() * SPAWN_POINTS.length)];
@@ -2209,6 +2297,7 @@
         reloading = false; burstLeft = 0; adsT = 0; kick = 0; bloom = 0; shake = 0;
         $('reload-wrap').style.display = 'none';
         $('killfeed').innerHTML = '';
+        if ($('achievement-toast')) $('achievement-toast').classList.remove('show');
         $('dmg-dirs').innerHTML = '';
         setHealthHud();
         wave = 0;
