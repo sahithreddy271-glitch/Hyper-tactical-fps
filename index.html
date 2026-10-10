@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Hyper Attack Gun Game</title>
+    <title>Tactical FPS Arena 3D</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
     <style>
@@ -218,6 +218,11 @@
         #stat-tags { margin-top: 12px; display: flex; gap: 6px; flex-wrap: wrap; }
         .tag { font-size: 10px; letter-spacing: 2px; padding: 3px 8px; border: 1px solid var(--c, var(--cyan)); color: var(--c, var(--cyan)); border-radius: 3px; }
         .lobby-hint { position: absolute; bottom: 18px; left: 50%; transform: translateX(-30%); font-size: 12px; letter-spacing: 3px; color: var(--mut); }
+        .feature-panel { margin-top: 12px; padding: 10px 12px; border: 1px solid var(--line); border-radius: 6px; background: rgba(255,255,255,0.035); }
+        .feature-panel h4 { margin: 0 0 8px; font: 700 11px 'Orbitron', sans-serif; letter-spacing: 2px; color: var(--cyan); }
+        .feature-row { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin: 7px 0; font-size: 12px; letter-spacing: 1px; color: var(--mut); }
+        .feature-row select { width: 92px; padding: 5px; border: 1px solid #2a3442; border-radius: 4px; color: #fff; background: #111925; font: inherit; }
+        .feature-note { margin-top: 6px; font-size: 10px; line-height: 1.4; letter-spacing: 1px; color: var(--mut); }
     </style>
 </head>
 <body>
@@ -285,6 +290,16 @@
             <div id="gun-tabs"></div>
             <div id="gun-list" class="gun-list"></div>
             <button class="deploy" id="deploy-btn">DEPLOY &#9656;</button>
+            <div class="feature-panel">
+                <h4>FEATURE OPTIONS</h4>
+                <div class="feature-row"><label for="player-limit">PLAYER LIMIT</label>
+                    <select id="player-limit" aria-label="Planned multiplayer player limit">
+                        <option>2</option><option>4</option><option>8</option><option>16</option><option>32</option><option selected>50</option>
+                    </select>
+                </div>
+                <div class="feature-row"><span>AI DIFFICULTY</span><strong style="color:var(--green)">EASY</strong></div>
+                <div class="feature-note">PLAYER LIMIT IS A PLANNING OPTION ONLY. ONLINE MULTIPLAYER / NETWORKING IS NOT ENABLED.</div>
+            </div>
             <div class="hint">WASD move &middot; SHIFT sprint &middot; SPACE jump<br>CLICK shoot &middot; RIGHT-CLICK aim &middot; R reload</div>
         </div>
         <div class="stats-panel glass" id="stats-panel">
@@ -1166,10 +1181,10 @@
      *  BOTS : archetypes, models
      * ===================================================================== */
     const BOT_TYPES = {
-        grunt:  { label: 'GRUNT',  hp: 100, speed: 4.8, gun: 'm4',      dmg: 9,  burst: [3, 5],  interval: 95,  pause: [550, 1000], range: [10, 34], acc: 0.045, scale: 1.0,  body: 0x232a35, plate: 0x3d5a80, glow: 0x00e5ff, score: 100, cover: true,  bulletSpeed: 75 },
-        rusher: { label: 'RUSHER', hp: 70,  speed: 7.6, gun: 'shotgun', dmg: 7,  pellets: 5, cooldown: [1000, 1500], range: [0, 14], acc: 0.07,  scale: 0.92, body: 0x2b1a1a, plate: 0xa83232, glow: 0xff3d57, score: 130, cover: false, bulletSpeed: 60 },
-        sniper: { label: 'SNIPER', hp: 80,  speed: 3.6, gun: 'sniper',  dmg: 34, charge: 1300, cooldown: [2200, 3200], range: [28, 60], acc: 0.006, scale: 1.0,  body: 0x1d2620, plate: 0x2f6f4f, glow: 0x66ff99, score: 180, cover: true,  bulletSpeed: 230 },
-        heavy:  { label: 'HEAVY',  hp: 240, speed: 3.0, gun: 'heavy',   dmg: 7,  burst: [8, 12], interval: 85,  pause: [900, 1500], range: [8, 28], acc: 0.07,  scale: 1.25, body: 0x2a2a2a, plate: 0x8a6d1d, glow: 0xffb300, score: 250, cover: false, bulletSpeed: 68 }
+        grunt:  { label: 'GRUNT',  hp: 65, speed: 3.8, gun: 'm4',      dmg: 4,  burst: [2, 3],  interval: 140, pause: [900, 1500], range: [10, 30], acc: 0.095, scale: 1.0,  body: 0x232a35, plate: 0x3d5a80, glow: 0x00e5ff, score: 100, cover: true,  bulletSpeed: 58 },
+        rusher: { label: 'RUSHER', hp: 45, speed: 5.0, gun: 'shotgun', dmg: 3,  pellets: 4, cooldown: [1500, 2100], range: [0, 12], acc: 0.12,  scale: 0.92, body: 0x2b1a1a, plate: 0xa83232, glow: 0xff3d57, score: 130, cover: false, bulletSpeed: 48 },
+        sniper: { label: 'SNIPER', hp: 55, speed: 2.8, gun: 'sniper',  dmg: 14, charge: 1800, cooldown: [3000, 4200], range: [28, 52], acc: 0.035, scale: 1.0, body: 0x1d2620, plate: 0x2f6f4f, glow: 0x66ff99, score: 180, cover: true,  bulletSpeed: 170 },
+        heavy:  { label: 'HEAVY',  hp: 130, speed: 2.3, gun: 'heavy',   dmg: 3,  burst: [4, 6],  interval: 130, pause: [1300, 1900], range: [8, 25], acc: 0.12, scale: 1.25, body: 0x2a2a2a, plate: 0x8a6d1d, glow: 0xffb300, score: 250, cover: false, bulletSpeed: 52 }
     };
 
     const BOT_GEO = {
