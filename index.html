@@ -31,6 +31,10 @@
         #mission-fill { height:100%; width:0; background:var(--green); box-shadow:0 0 8px var(--green); transition:width .2s; }
         #mission-reward { margin-top:7px; color:var(--amber); font-size:10px; letter-spacing:1px; }
         @media (max-width:700px) { #mission-panel { top:12px; left:12px; width:190px; padding:8px; } #mission-title { font-size:10px; } }
+        .feature-row select { background:#101923; color:#00ff9d; border:1px solid rgba(0,255,157,.4); padding:5px 8px; font:700 12px 'Rajdhani',sans-serif; }
+        #combat-tip { position:absolute; left:50%; bottom:118px; transform:translateX(-50%); padding:7px 13px; background:rgba(5,12,18,.8); border:1px solid rgba(0,229,255,.28); color:#dffaff; font-size:12px; letter-spacing:1px; opacity:0; transition:opacity .3s; white-space:nowrap; }
+        #combat-tip.show { opacity:1; }
+        .feature-note { line-height:1.4; }
 
         #vignette {
             position: absolute; inset: 0; opacity: 0; transition: opacity 0.25s;
@@ -260,6 +264,7 @@
         <div id="crosshair"><i class="ch t"></i><i class="ch b"></i><i class="ch l"></i><i class="ch r"></i><i class="ch dot"></i></div>
         <div id="hitmarker"></div>
         <div id="announce"></div>
+        <div id="combat-tip" aria-live="polite">WAVE CLEARED — AMMO RESTOCKED</div>
         <div id="reload-wrap"><div class="rt">RELOADING</div><div id="reload-track"><div id="reload-bar"></div></div></div>
 
         <div id="mission-panel">
@@ -326,8 +331,10 @@
                         <option>2</option><option>4</option><option>8</option><option>16</option><option>32</option><option selected>50</option>
                     </select>
                 </div>
-                <div class="feature-row"><span>AI DIFFICULTY</span><strong style="color:var(--green)">EASY</strong></div>
-                <div class="feature-note">PLAYER LIMIT IS A PLANNING OPTION ONLY. ONLINE MULTIPLAYER / NETWORKING IS NOT ENABLED.</div>
+                <div class="feature-row"><label for="ai-difficulty">AI DIFFICULTY</label>
+                    <select id="ai-difficulty"><option value="easy" selected>EASY</option><option value="normal">NORMAL</option><option value="hard">HARD</option></select>
+                </div>
+                <div class="feature-note">PLAYER LIMIT IS A UI OPTION ONLY. ONLINE NETWORKING IS NOT ENABLED.</div>
             </div>
             <div class="hint">WASD move &middot; SHIFT sprint &middot; SPACE jump<br>CLICK shoot &middot; RIGHT-CLICK aim &middot; R reload</div>
         </div>
@@ -432,6 +439,8 @@
     // per-match
     let killsInMatch = 0, headshots = 0, shotsFired = 0, shotsHit = 0, score = 0, matchStart = 0;
     let wave = 0, waveState = 'active', waveTimer = 0;
+    let aiDifficulty = 'easy';
+    const DIFFICULTY = { easy: { hp: 0.72, damage: 0.55, speed: 0.82, reaction: 1.35 }, normal: { hp: 1, damage: 1, speed: 1, reaction: 1 }, hard: { hp: 1.28, damage: 1.3, speed: 1.12, reaction: 0.78 } };
     let streak = 0, streakUntil = 0;
     const achievementDefs = {
         first_blood: { title: 'FIRST BLOOD', test: () => killsInMatch >= 1 },
@@ -522,13 +531,14 @@
                 if (Number.isInteger(s.weapon) && WEAPONS[s.weapon]) selectedWeaponIndex = s.weapon;
                 if (Number.isFinite(s.sens)) settings.sens = s.sens;
                 if (Number.isFinite(s.volume)) settings.volume = s.volume;
+                if (['easy','normal','hard'].includes(s.aiDifficulty)) aiDifficulty = s.aiDifficulty;
             }
         } catch (e) { /* storage unavailable */ }
     }
     function saveGame() {
         try {
             localStorage.setItem('tfps-save2', JSON.stringify({
-                username, totalKills, bestWave, highScore, weapon: selectedWeaponIndex, sens: settings.sens, volume: settings.volume
+                username, totalKills, bestWave, highScore, weapon: selectedWeaponIndex, sens: settings.sens, volume: settings.volume, aiDifficulty
             }));
         } catch (e) { /* ignore */ }
     }
@@ -1394,14 +1404,16 @@
         const bot = buildBotModel(typeKey);
         bot.position.copy(pickFreePoint(32, true));
         bot.rotation.y = Math.random() * Math.PI * 2;
-        const skill = 0.22; // beginner-friendly AI: slower reactions and less accurate shots
-        const hpMul = 1 + 0.025 * (wave - 1);
+        const diff = DIFFICULTY[aiDifficulty] || DIFFICULTY.easy;
+        const skill = aiDifficulty === 'easy' ? 0.18 : (aiDifficulty === 'hard' ? 0.5 : 0.32);
+        const hpMul = diff.hp * (1 + 0.015 * (wave - 1));
+        bot.userData.baseSpeed = T.speed * diff.speed;
         const ud = bot.userData;
         Object.assign(ud, {
             typeKey, T, dead: false,
             hp: T.hp * hpMul, maxHp: T.hp * hpMul, skill,
-            react: 1050 - 250 * skill,
-            dmgMul: Math.min(0.85, 0.72 + 0.01 * (wave - 1)),
+            react: (aiDifficulty === 'easy' ? 1550 : aiDifficulty === 'hard' ? 750 : 1100) * diff.reaction,
+            dmgMul: diff.damage * Math.min(0.85, 0.72 + 0.006 * (wave - 1)),
             h: 2.7 * T.scale, headY: 1.95 * T.scale, r: 0.8 * T.scale,
             state: 'patrol', sees: false, nextSense: 0, reactAt: 0,
             lastKnown: new THREE.Vector3(), lastSeenAt: -1e9,
@@ -1766,6 +1778,7 @@
         else if (streak >= 4) announce('RAMPAGE x' + streak, '#ff3d57');
         else if (headshot) announce('HEADSHOT', '#ff3d57');
         if (streak >= 2) score += streak * 20;
+        if (streak > 0 && streak % 5 === 0) { score += 250; announce('KILL STREAK x' + streak + '  +250', '#ffb300'); addFeed('KILL STREAK REWARD +250', false, true); }
         checkAchievements();
         checkChallenge();
 
@@ -1836,9 +1849,12 @@
             waveTimer = 4.5;
             const bonus = 150 * wave;
             score += bonus;
-            player.health = Math.min(100, player.health + 25);
+            player.health = Math.min(100, player.health + 35);
+            WEAPONS.forEach((w, i) => { ammo[i] = w.mag; });
+            updateAmmoHud();
             setHealthHud();
-            announce('WAVE CLEARED', '#00ff9d');
+            announce('WAVE CLEARED · RESTOCKED', '#00ff9d');
+            const tip = $('combat-tip'); if (tip) { tip.textContent = 'WAVE CLEARED — +35 HEALTH — AMMO RESTOCKED'; tip.classList.add('show'); setTimeout(() => tip.classList.remove('show'), 2400); }
             addFeed('WAVE ' + wave + ' CLEARED  +' + bonus, false, true);
             checkChallenge();
         } else if (waveState === 'break') {
@@ -2413,6 +2429,8 @@
     $('login-btn').addEventListener('click', handleLogin);
     $('login-username').addEventListener('keydown', (e) => { if (e.code === 'Enter') handleLogin(); });
     $('deploy-btn').addEventListener('click', deployToCombat);
+    const difficultySelect = $('ai-difficulty');
+    if (difficultySelect) difficultySelect.addEventListener('change', () => { aiDifficulty = difficultySelect.value; });
     $('return-btn').addEventListener('click', returnToLobby);
     $('quit-btn').addEventListener('click', returnToLobby);
     $('resume-btn').addEventListener('click', lockPointer);
@@ -2520,6 +2538,7 @@
      *  BOOT
      * ===================================================================== */
     loadSave();
+    if ($('ai-difficulty')) $('ai-difficulty').value = aiDifficulty;
     ammo.length = 0;
     WEAPONS.forEach((w, i) => { ammo[i] = w.mag; });
     $('login-username').value = username;
