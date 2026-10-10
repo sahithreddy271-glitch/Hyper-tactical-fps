@@ -248,6 +248,29 @@
         .feature-row select { background:#101923; color:var(--txt); border:1px solid var(--line); padding:5px 8px; }
         .feature-note { margin-top:8px; color:var(--mut); font-size:10px; letter-spacing:1px; line-height:1.4; }
 
+
+        /* Enhanced armory presentation */
+        .sidebar, .stats-panel { border:1px solid rgba(0,229,255,.28); box-shadow:0 18px 50px rgba(0,0,0,.42), inset 0 0 24px rgba(0,229,255,.035); backdrop-filter:blur(12px); }
+        .sidebar h3 { color:#f3fbff; font-family:'Orbitron',sans-serif; letter-spacing:2px; }
+        .topbar { border-bottom:1px solid rgba(0,229,255,.2); background:linear-gradient(90deg,rgba(5,10,18,.94),rgba(8,20,30,.76)); }
+        .logo { text-shadow:0 0 18px rgba(0,229,255,.35); }
+        .gun-item { border-radius:7px; transition:background .16s,border-color .16s,transform .16s,box-shadow .16s; }
+        .gun-item.active { background:linear-gradient(100deg,rgba(0,229,255,.14),rgba(41,121,255,.07)); }
+        .deploy { box-shadow:0 0 22px rgba(0,255,157,.13); transition:transform .15s,filter .15s; }
+        .deploy:hover { transform:translateY(-2px); filter:brightness(1.13); }
+        .operator-section { padding:10px 0 12px; border-bottom:1px solid rgba(0,229,255,.14); margin-bottom:12px; }
+        .operator-section h4 { margin:0 0 8px; color:var(--mut); font:700 10px 'Orbitron',sans-serif; letter-spacing:2px; }
+        #operator-list { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:6px; }
+        .operator-card { min-width:0; padding:9px 5px; text-align:center; cursor:pointer; background:rgba(255,255,255,.025); border:1px solid rgba(255,255,255,.1); border-radius:7px; transition:all .16s; }
+        .operator-card:hover { background:rgba(0,229,255,.07); transform:translateY(-1px); }
+        .operator-card.active { border-color:var(--op-color); background:color-mix(in srgb,var(--op-color) 13%,transparent); box-shadow:0 0 13px color-mix(in srgb,var(--op-color) 20%,transparent); }
+        .operator-avatar { width:34px; height:34px; margin:0 auto 6px; display:grid; place-items:center; border-radius:50%; color:var(--op-color); border:1px solid var(--op-color); background:radial-gradient(circle, color-mix(in srgb,var(--op-color) 18%,transparent),rgba(0,0,0,.5)); font:900 14px 'Orbitron',sans-serif; }
+        .operator-name { color:#f3f8fc; font:700 9px 'Orbitron',sans-serif; letter-spacing:.3px; }
+        .operator-perk { color:var(--mut); font-size:10px; line-height:1.2; margin-top:4px; }
+        #operator-summary { color:var(--green); font-size:11px; margin-top:8px; letter-spacing:.5px; }
+        .armory-kicker { color:var(--cyan); font-size:10px; letter-spacing:2px; margin:-4px 0 10px; }
+        @media(max-height:760px) { .operator-section { padding:6px 0; margin-bottom:7px; } .operator-card { padding:5px 3px; } .operator-avatar { width:27px;height:27px; } .operator-perk { display:none; } }
+
     </style>
 </head>
 <body>
@@ -321,6 +344,12 @@
         </div>
         <div class="sidebar">
             <h3>SELECT LOADOUT</h3>
+            <div class="armory-kicker">ARSENAL // OPERATIVE CONFIGURATION</div>
+            <div class="operator-section">
+                <h4>CHOOSE YOUR OPERATIVE</h4>
+                <div id="operator-list" role="group" aria-label="Choose operative"></div>
+                <div id="operator-summary">ASSAULT // +10% WEAPON DAMAGE</div>
+            </div>
             <div id="gun-tabs"></div>
             <div id="gun-list" class="gun-list"></div>
             <button class="deploy" id="deploy-btn">DEPLOY &#9656;</button>
@@ -416,7 +445,12 @@
         W({ name: "Tactical DMR", type: "dmr", cls: "SNIPER", sfx: "rifle", cooldown: 300, damage: 56, color: 0x1c2833, glow: 0x00e5ff, auto: false, spread: 0.002, recoil: 0.02, mag: 12, reload: 2100, zoom: 2.5, noise: 60, desc: "Semi-auto marksman rifle. Precise at range." }),
         W({ name: "Bolt Sniper", type: "sniper", cls: "SNIPER", sfx: "sniper", cooldown: 1150, damage: 105, color: 0x1a1d2b, glow: 0xff4081, auto: false, spread: 0.0005, recoil: 0.05, mag: 5, reload: 2700, zoom: 4, scope: true, noise: 80, pierce: 1, desc: "One shot, one kill. The round pierces a target." }),
         W({ name: "Heavy Suppressed", type: "suppressed", cls: "SPECIAL", sfx: "suppressed", cooldown: 135, damage: 28, color: 0x1a1c20, glow: 0x69f0ae, spread: 0.005, recoil: 0.009, mag: 30, reload: 1800, zoom: 1.8, noise: 12, desc: "Near silent. Enemies barely hear you shoot." }),
-        W({ name: "Laser Rifle", type: "laser", cls: "SPECIAL", sfx: "laser", cooldown: 95, damage: 22, color: 0x1b2a3a, glow: 0x00f0ff, spread: 0.002, recoil: 0.005, mag: 60, reload: 2000, zoom: 1.6, pierce: 2, noise: 30, desc: "Plasma bolts pierce up to three targets." })
+        W({ name: "Laser Rifle", type: "laser", cls: "SPECIAL", sfx: "laser", cooldown: 95, damage: 22, color: 0x1b2a3a, glow: 0x00f0ff, spread: 0.002, recoil: 0.005, mag: 60, reload: 2000, zoom: 1.6, pierce: 2, noise: 30, desc: "Plasma bolts pierce up to three targets." }),
+        W({ name: "Vanguard AR", type: "m4", cls: "RIFLE", sfx: "rifle", cooldown: 92, damage: 24, color: 0x263b3c, glow: 0x00ff9d, spread: 0.005, recoil: 0.009, mag: 36, reload: 1750, zoom: 1.9, desc: "A tuned assault rifle with a steady, fast firing rhythm." }),
+        W({ name: "Frostbite SMG", type: "smg", cls: "SMG", sfx: "smg", cooldown: 68, damage: 12, color: 0x25364b, glow: 0x80d8ff, spread: 0.011, recoil: 0.006, mag: 48, reload: 1550, zoom: 1.45, desc: "Ultra-fast close-range SMG with a generous magazine." }),
+        W({ name: "Ranger DMR", type: "dmr", cls: "SNIPER", sfx: "rifle", cooldown: 260, damage: 62, color: 0x35433c, glow: 0xb8ff8c, auto: false, spread: 0.0018, recoil: 0.018, mag: 14, reload: 2000, zoom: 2.7, noise: 58, desc: "Precision semi-auto rifle for controlled long-range shots." }),
+        W({ name: "Nova Hand Cannon", type: "magnum", cls: "PISTOL", sfx: "pistol", cooldown: 470, damage: 74, color: 0x40334a, glow: 0xd5a3ff, auto: false, spread: 0.0035, recoil: 0.03, mag: 8, reload: 1800, zoom: 1.35, noise: 58, pierce: 1, desc: "A custom revolver that hits hard but rewards careful aim." }),
+        W({ name: "Arc Blaster X", type: "laser", cls: "SPECIAL", sfx: "laser", cooldown: 78, damage: 19, color: 0x183b43, glow: 0x4dfff3, spread: 0.0015, recoil: 0.004, mag: 72, reload: 2100, zoom: 1.7, pierce: 3, noise: 28, desc: "Experimental energy weapon with excellent control and piercing shots." })
     ];
     const CLASSES = ['ALL', 'PISTOL', 'SHOTGUN', 'SMG', 'RIFLE', 'SNIPER', 'SPECIAL'];
 
@@ -431,6 +465,13 @@
     let state = 'login';             // login | lobby | playing | paused | dead
     let username = 'Agent_Zero';
     let selectedWeaponIndex = 0;
+    const OPERATORS = [
+        { id:'assault', name:'VANGUARD', initial:'V', color:'#ffb347', perk:'+10% WEAPON DAMAGE', damage:1.10, spread:1, heal:35 },
+        { id:'medic', name:'FIELD MEDIC', initial:'M', color:'#00ff9d', perk:'+55 WAVE HEAL', damage:1, spread:1, heal:55 },
+        { id:'recon', name:'PHANTOM', initial:'P', color:'#65bfff', perk:'TIGHTER ACCURACY', damage:1, spread:.82, heal:35 }
+    ];
+    let selectedOperatorId = 'assault';
+    const currentOperator = () => OPERATORS.find(o => o.id === selectedOperatorId) || OPERATORS[0];
     let totalKills = 0, bestWave = 0, highScore = 0;
     let isLocked = false;
     let activeTab = 'ALL';
@@ -532,13 +573,14 @@
                 if (Number.isFinite(s.sens)) settings.sens = s.sens;
                 if (Number.isFinite(s.volume)) settings.volume = s.volume;
                 if (['easy','normal','hard'].includes(s.aiDifficulty)) aiDifficulty = s.aiDifficulty;
+                if (OPERATORS.some(o => o.id === s.operator)) selectedOperatorId = s.operator;
             }
         } catch (e) { /* storage unavailable */ }
     }
     function saveGame() {
         try {
             localStorage.setItem('tfps-save2', JSON.stringify({
-                username, totalKills, bestWave, highScore, weapon: selectedWeaponIndex, sens: settings.sens, volume: settings.volume, aiDifficulty
+                username, totalKills, bestWave, highScore, weapon: selectedWeaponIndex, operator: selectedOperatorId, sens: settings.sens, volume: settings.volume, aiDifficulty
             }));
         } catch (e) { /* ignore */ }
     }
@@ -1112,7 +1154,7 @@
         const col = hex(w.glow);
         const panel = $('stats-panel');
         panel.style.setProperty('--c', col);
-        $('stat-class').textContent = w.cls;
+        $('stat-class').textContent = w.cls + ' // ' + WEAPONS.length + ' WEAPONS';
         $('stat-name').textContent = w.name;
         $('stat-desc').textContent = w.desc;
 
@@ -1849,12 +1891,12 @@
             waveTimer = 4.5;
             const bonus = 150 * wave;
             score += bonus;
-            player.health = Math.min(100, player.health + 35);
+            player.health = Math.min(100, player.health + currentOperator().heal);
             WEAPONS.forEach((w, i) => { ammo[i] = w.mag; });
             updateAmmoHud();
             setHealthHud();
             announce('WAVE CLEARED · RESTOCKED', '#00ff9d');
-            const tip = $('combat-tip'); if (tip) { tip.textContent = 'WAVE CLEARED — +35 HEALTH — AMMO RESTOCKED'; tip.classList.add('show'); setTimeout(() => tip.classList.remove('show'), 2400); }
+            const tip = $('combat-tip'); if (tip) { tip.textContent = 'WAVE CLEARED — +' + currentOperator().heal + ' HEALTH — AMMO RESTOCKED'; tip.classList.add('show'); setTimeout(() => tip.classList.remove('show'), 2400); }
             addFeed('WAVE ' + wave + ' CLEARED  +' + bonus, false, true);
             checkChallenge();
         } else if (waveState === 'break') {
@@ -2142,7 +2184,7 @@
         muzzleAnchor.getWorldPosition(_muzzle);
         const mat = tracerMat(w.glow);
         const moveFactor = clamp(Math.hypot(player.vel.x, player.vel.z) / CFG.playerSpeed, 0, 1) * 0.6 + (player.grounded ? 0 : 1);
-        const sp = w.spread * (1 + bloom * 0.06 + moveFactor) * (1 - 0.65 * adsT);
+        const sp = w.spread * currentOperator().spread * (1 + bloom * 0.06 + moveFactor) * (1 - 0.65 * adsT);
 
         for (let p = 0; p < w.pellets; p++) {
             _fdir.copy(_aim).sub(_muzzle).normalize();
@@ -2150,7 +2192,7 @@
             _fdir.y += (Math.random() - 0.5) * 2 * sp;
             _fdir.z += (Math.random() - 0.5) * 2 * sp;
             _fdir.normalize();
-            spawnBullet(_muzzle, _fdir, 'player', w.damage, CFG.bulletSpeed, mat, w.pierce);
+            spawnBullet(_muzzle, _fdir, 'player', w.damage * currentOperator().damage, CFG.bulletSpeed, mat, w.pierce);
             shotsFired++;
         }
 
@@ -2328,7 +2370,7 @@
         $('lobby-ui').style.display = 'none';
         $('hud').style.display = 'block';
         viewModel.visible = true;
-        $('hud-username').textContent = username;
+        $('hud-username').textContent = username + ' / ' + currentOperator().name;
         camera.fov = CFG.baseFov;
         camera.updateProjectionMatrix();
         updateViewModel();
@@ -2355,6 +2397,7 @@
         $('hud').style.display = 'none';
         $('lobby-ui').style.display = 'block';
         refreshProfile();
+        populateOperators();
         populateArmoryList();
         setupLobbyCamera();
         saveGame();
@@ -2374,6 +2417,29 @@
             const p = canvas.requestPointerLock();
             if (p && p.catch) p.catch(() => {});
         } catch (e) { /* ignore */ }
+    }
+
+    function populateOperators() {
+        const root = $('operator-list');
+        if (!root) return;
+        root.innerHTML = '';
+        OPERATORS.forEach(op => {
+            const card = document.createElement('button');
+            card.type = 'button';
+            card.className = 'operator-card' + (op.id === selectedOperatorId ? ' active' : '');
+            card.style.setProperty('--op-color', op.color);
+            card.setAttribute('aria-pressed', op.id === selectedOperatorId ? 'true' : 'false');
+            card.innerHTML = `<div class="operator-avatar">${op.initial}</div><div class="operator-name">${op.name}</div><div class="operator-perk">${op.perk}</div>`;
+            card.addEventListener('click', () => {
+                selectedOperatorId = op.id;
+                populateOperators();
+                saveGame();
+            });
+            root.appendChild(card);
+        });
+        const op = currentOperator();
+        $('operator-summary').textContent = op.name + ' // ' + op.perk;
+        $('operator-summary').style.color = op.color;
     }
 
     function populateArmoryList() {
